@@ -13,8 +13,19 @@ The details of the implementation, user interface, and example code are describe
 
 We ask that you give proper reference when using this software.
 If you use it with only small modifications (note the Apache 2.0 license), use 
-@Blah@
-If you make significant modifications but stick to the approach based on Exponential Cone Programming, use
+```
+@Article{makkeh-theis-vicente:pidOpt:2017,
+  author =       {Makkeh, Abdullah and Theis, Dirk Oliver and Vicente, Raul},
+  title =        {BROJA-2PID: A cone programming based Partial Information Decomposition estimator},
+  journal =      {jo},
+  year =         2017,
+  key =       {key},
+  volume =    {vol},
+  number =    {nr},
+  pages =     {1--2}
+}
+```
+If you make significant modifications but stick to the approach based on the same Exponential Cone Programming model, use
 ```
 @Article{makkeh-theis-vicente:pidOpt:2017,
   author =       {Makkeh, Abdullah and Theis, Dirk Oliver and Vicente, Raul},
@@ -27,3 +38,4 @@ If you make significant modifications but stick to the approach based on Exponen
   pages =     {1--2}
 }
 ```
+In addition, if you use another Exponential Cone Programming model, one that resembles one of the models in Makkeh's PhD thesis, please cite his thesis.
