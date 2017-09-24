@@ -11,6 +11,7 @@ The details of the implementation, user interface, and example code are describe
 * A. Makkeh, D.O. Theis, R. Vicente, *BROJA-2PID: A cone programming based Partial Information Decomposition estimator*
 (currently in preparation).
 
+### If you use this code...
 We ask that you give proper reference when using this software.
 If you use it with only small modifications (note the Apache 2.0 license), use 
 ```
