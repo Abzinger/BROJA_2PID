@@ -1,4 +1,4 @@
-# BROJA-2PID: Bertschinger-Rauh-Olbrich-Jost-Ay (BROJA) bivariate Partial Information Decomposition
+# BROJA_2PID: Bertschinger-Rauh-Olbrich-Jost-Ay (BROJA) bivariate Partial Information Decomposition
 
 This Python module implements the Bertschinger-Rauh-Olbrich-Jost-Ay bivariate Partial Information Decomposition (N. Bertschinger, J. Rauh, E. Olbrich, J. Jost, N. Ay, *Quantifying Unique Information.* Entropy 2014, 16, 2161-2183; [doi:10.3390/e16042161](http://dx.doi.org/10.3390/e16042161).).
 
