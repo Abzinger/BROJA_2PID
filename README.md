@@ -3,7 +3,7 @@
 This Python module implements the Bertschinger-Rauh-Olbrich-Jost-Ay bivariate Partial Information Decomposition (N. Bertschinger, J. Rauh, E. Olbrich, J. Jost, N. Ay, *Quantifying Unique Information.* Entropy 2014, 16, 2161-2183; [doi:10.3390/e16042161](http://dx.doi.org/10.3390/e16042161).).
 
 It uses the Exponential Cone Programming approach described in
-* A. Makkeh, D.O. Theis, R. Vicente, *Bivariate Partial Information Decomposition: The Optimization Perspective* (to appear in Entropy, 2017),   
+* A. Makkeh, D.O. Theis, R. Vicente, *Bivariate Partial Information Decomposition: The Optimization Perspective* (Entropy 19, 530 (2017)),
 and
 * Abdullah Makkeh's PhD thesis (forthcoming (2018))
 
