@@ -24,6 +24,7 @@ from ecos  import solve
 from scipy import sparse
 import numpy as np
 import math
+from collections import defaultdict
 
 log = math.log2
 ln  = math.log
@@ -263,7 +264,7 @@ class Solve_w_ECOS:
 
 
             return "success"
-        else:
+        else: # "x" not in dict solution
             return "What the fuck?!??"
         #^ if/esle
     #^ solve()
@@ -271,8 +272,8 @@ class Solve_w_ECOS:
     def provide_marginals(self):
         if self.marg_yz == None:
             self.marg_yz = dict()
-            self.marg_y  = [ 0 for y in self.Y ]
-            self.marg_z  = [ 0 for z in self.Z ]
+            self.marg_y  = defaultdict(lambda: 0.)
+            self.marg_z  = defaultdict(lambda: 0.)
             for y in self.Y:
                 for z in self.Z:
                     zysum = 0.
