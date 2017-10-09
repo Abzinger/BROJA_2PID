@@ -455,7 +455,7 @@ def pid(pdf_dirty, output=0, keep_solver_object=False):
 
     return_data["Num_err"] = (solver.sol_info["pinf"],
                               solver.sol_info["dinf"],
-                              solver.sol_info["relgap"])
+                              solver.sol_info["gap"])
     return_data["Solver"] = "ECOS http://www.embotech.com/ECOS"
 
     if type(keep_solver_object) is bool  and  keep_solver_object:
