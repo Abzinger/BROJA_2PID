@@ -2,7 +2,7 @@
 
 from broja_2pid import pid, BROJA_2PID_Exception
 
-# AND gate 
+# AND gate
 andgate = dict()
 andgate[ (0,0,0) ] = .25
 andgate[ (0,0,1) ] = .25
@@ -22,7 +22,7 @@ xorgate[ (0,1,1) ] = .25
 dirty_xorgate = xorgate.copy()
 xorgate[ (0,1,0) ] = 0.
 
-# RDN gate 
+# RDN gate
 rdngate = dict()
 rdngate[ (0,0,0) ] = .5
 rdngate[ (1,1,1) ] = .5
@@ -40,7 +40,7 @@ unqgate[ ((1,1),1,1) ] = .25
 dirty_unqgate = unqgate.copy()
 dirty_unqgate[ ((0,0),1,1) ] = 0.
 
-# RDNXOR
+# RDNXOR gate
 rdnxorgate = dict()
 rdnxorgate[ ((0,0), (0,0), (0,0)) ] = .125
 rdnxorgate[ ((1,0), (0,0), (1,0)) ] = .125
@@ -54,7 +54,7 @@ rdnxorgate[ ((0,1), (1,1), (1,1)) ] = .125
 dirty_rdnxorgate = rdnxorgate.copy()
 dirty_rdnxorgate[ ((0,0), (0,0), (1,1)) ] = 0.
 
-# RDNUNQXOR
+# RDNUNQXOR gate
 rdnunqxorgate = dict()
 rdnunqxorgate[ ((0,0,0,0), (0,0), (0,0)) ] = 1/32
 rdnunqxorgate[ ((1,0,0,0), (0,0), (1,0)) ] = 1/32
@@ -103,7 +103,7 @@ dirty_xorandgate = xorandgate.copy()
 dirty_xorandgate[ ((0,0), 1, 1) ] = 0.
 
 
-# Running 
+# Run it
 print("Quiet mode")
 print("==========")
 print("AND gate: ",      pid(andgate) )
