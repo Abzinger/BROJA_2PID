@@ -1,4 +1,4 @@
-# tester.py
+# test_gates.py
 
 from broja_2pid import pid, BROJA_2PID_Exception
 
