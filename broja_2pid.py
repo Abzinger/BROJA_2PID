@@ -244,7 +244,7 @@ class Solve_w_ECOS:
                 r = self.sol_rpq[r_vidx(i)]
                 p = self.sol_rpq[p_vidx(i)]
                 q = self.sol_rpq[q_vidx(i)]
-                assert q > 0, "A q is negative"
+                assert q > 0, "A q is negative:"+str(q)
                 assert r <= q*ln(p/q)+1.e-6, "A expcone-ieq is violated"
                 if r < q*ln(p/q)-1.e-2: print("This is weird: large difference ",exp(r/q) - p/q," between exp(r/q) and p/q")
             for y in self.Y:
