@@ -317,8 +317,8 @@ class Solve_w_ECOS:
                 for y in self.Y:
                     if (x,y,z) in self.idx_of_trip.keys():
                         i = q_vidx(self.idx_of_trip[ (x,y,z) ])
-                        q = max(0, self.sol_rpq[i])
-                        mysum += q*log( q * self.marg_y[y] / ( self.b_xy[ (x,y) ] * self.marg_yz[ (y,z) ] ) )
+                        q = self.sol_rpq[i]
+                        if q > 0 : mysum += q*log( q * self.marg_y[y] / ( self.b_xy[ (x,y) ] * self.marg_yz[ (y,z) ] ) )
                     #^ if
                 #^ for i
             #^ for z
@@ -336,8 +336,8 @@ class Solve_w_ECOS:
                 for z in self.Z:
                     if (x,y,z) in self.idx_of_trip.keys():
                         i = q_vidx(self.idx_of_trip[ (x,y,z) ])
-                        q = max(0, self.sol_rpq[i])
-                        mysum += q*log( q * self.marg_z[z] / ( self.b_xz[ (x,z) ] * self.marg_yz[ (y,z) ] ) )
+                        q = self.sol_rpq[i]
+                        if q > 0: mysum += q*log( q * self.marg_z[z] / ( self.b_xz[ (x,z) ] * self.marg_yz[ (y,z) ] ) )
                     #^ if
                 #^ for z
             #^ for y
@@ -370,10 +370,10 @@ class Solve_w_ECOS:
                 marg_x = 0.
                 q_list = [ q_vidx(self.idx_of_trip[ (x,y,z) ]) for x in self.X if (x,y,z) in self.idx_of_trip.keys()]
                 for i in q_list:
-                    marg_x += max(0, self.sol_rpq[i])
+                    if i > 0 : marg_x += self.sol_rpq[i]
                 for i in q_list:
-                    q = max(0, self.sol_rpq[i])
-                    mysum -= q*log(q/marg_x)
+                    q = self.sol_rpq[i]
+                    if q > 0: mysum -= q*log(q/marg_x)
                 #^ for i
             #^ for z
         #^ for y
