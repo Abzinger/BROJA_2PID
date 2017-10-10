@@ -58,6 +58,7 @@ class Solve_w_ECOS:
         self.reltol_inacc  = None
         self.max_iters     = None
         self.verbose       = False
+        self.ourzero       = -1.e-8
 
         # Data for ECOS
         self.c            = None
@@ -244,8 +245,23 @@ class Solve_w_ECOS:
                 r = self.sol_rpq[r_vidx(i)]
                 p = self.sol_rpq[p_vidx(i)]
                 q = self.sol_rpq[q_vidx(i)]
-                assert q > 0, "A q is negative:"+str(q)
-                assert r <= q*ln(p/q)+1.e-6, "A expcone-ieq is violated"
+                if (q < 0 and q > self.ourzero):
+                    print("A q is negative:"+str(q))
+                    self.sol_rpq[q_vidx(i)] = -self.sol_rpq[q_vidx(i)]
+                    q = -q
+                else:
+                    assert q > 0, "A q is negative:"+str(q)
+                if (p < 0 and p > self.ourzero):
+                    print("A p is neagtive:"+str(p))
+                    self.sol_rpq[p_vidx(i)] = -self.sol_rpq[p_vidx(i)]
+                    p = -p
+                else:
+                    assert p > 0, "A p is negative:"+str(p)
+                if r >q*ln(p/q) + 1.e-6:
+                    diff = r - q*ln(p/q)
+                    print("the difference is "+str(diff)+"\n")
+                    print("the variable index is"+str(i))
+                #assert r <= q*ln(p/q)+1.e-6, "A expcone-ieq is violated"
                 if r < q*ln(p/q)-1.e-2: print("This is weird: large difference ",exp(r/q) - p/q," between exp(r/q) and p/q")
             for y in self.Y:
                 for z in self.Z:
@@ -337,6 +353,8 @@ class Solve_w_ECOS:
                 if not (x,y) in self.b_xy:  continue
                 for z in self.Z:
                     if (x,y,z) in pdf.keys():
+                        if (pdf[(x,y,z)] < 0 and pdf[(x,y,z)] > self.ourzero):
+                            pdf[(x,y,z)] = -pdf[(x,y,z)]
                         psum += pdf[(x,y,z)]
                     #^ if
                 #^ for z
@@ -353,7 +371,8 @@ class Solve_w_ECOS:
             for z in self.Z:
                 marg_x = 0.
                 q_list = [ q_vidx(self.idx_of_trip[ (x,y,z) ]) for x in self.X if (x,y,z) in self.idx_of_trip.keys()]
-                for i in q_list: marg_x += self.sol_rpq[i]
+                for i in q_list:
+                    marg_x += self.sol_rpq[i]
                 for i in q_list:
                     q = self.sol_rpq[i]
                     mysum -= q*log(q/marg_x)
