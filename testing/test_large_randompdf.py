@@ -1,7 +1,7 @@
 # test_large_randompdf.py
 
-import broja_2pid as BROJA
-from broja_2pid import BROJA_2PID_Exception
+import BROJA_2PID as BROJA
+from BROJA_2PID import BROJA_2PID_Exception
 
 import time
 from random import random

@@ -1,6 +1,6 @@
 # test_gates.py
 
-from broja_2pid import pid, BROJA_2PID_Exception
+from BROJA_2PID import pid, BROJA_2PID_Exception
 
 # AND gate
 andgate = dict()
