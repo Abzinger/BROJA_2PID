@@ -70,5 +70,5 @@ for iter in range(maxiter):
 #^ for iter
 toc = time.process_time()
 print("**********************************************************************")
-print("Average time: ",(toc-tic)/nX/nY/nZ,"secs")
+print("Average time: ",(toc-tic)/maxiter,"secs")
 #EOF

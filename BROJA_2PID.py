@@ -245,12 +245,12 @@ class Solve_w_ECOS:
                 p = self.sol_rpq[p_vidx(i)]
                 q = self.sol_rpq[q_vidx(i)]
                 if q < 0:
-                    print("A q is negative:"+str(q))
+                    print("WARNING: A q is negative:"+str(q))
                     assert q > -1.e-8, "A q is very very negative:"+str(q)
                     q = 0
                 #^ if
                 if p < 0:
-                    print("A p is neagtive:"+str(p))
+                    print("WARNING: A p is neagtive:"+str(p))
                     assert q > -1.e-8, "A p is very very negative:"+str(p)
                     p = 0
                 #^ if
@@ -258,9 +258,9 @@ class Solve_w_ECOS:
                 if q > 0:   r_neg =  q*ln(p/q) - r
                 else:       r_neg = -r
                 if r_neg < -1.e-8:
-                    print("An r is on the wrong side of the ieq: r_neg=",r_neg)
+                    print("WARNING: An r is on the wrong side of the ieq: r_neg=",r_neg)
                 elif r_neg > 1.e-2:
-                    print("This is weird: large difference ",r_neg," between exp(r/q) and p/q")
+                    print("WARNING: This is weird: large difference ",r_neg," between exp(r/q) and p/q")
                 #^ if/elif
             #^ for i,xyz
             for y in self.Y:
