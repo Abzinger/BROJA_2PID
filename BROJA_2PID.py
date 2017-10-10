@@ -370,7 +370,7 @@ class Solve_w_ECOS:
                 marg_x = 0.
                 q_list = [ q_vidx(self.idx_of_trip[ (x,y,z) ]) for x in self.X if (x,y,z) in self.idx_of_trip.keys()]
                 for i in q_list:
-                    marg_x += self.sol_rpq[i]
+                    marg_x += max(0, self.sol_rpq[i])
                 for i in q_list:
                     q = max(0, self.sol_rpq[i])
                     mysum -= q*log(q/marg_x)
