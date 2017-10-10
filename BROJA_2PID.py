@@ -1,7 +1,7 @@
-# broja_2pid.py -- Python module
+# BROJA_2PID.py -- Python module
 #
 # BROJA_2PID: Bertschinger-Rauh-Olbrich-Jost-Ay (BROJA) bivariate Partial Information Decomposition
-# https://github.com/dot-at/BROJA_2PID
+# https://github.com/Abzinger/BROJA_2PID
 # (c) Abdullah Makkeh, Dirk Oliver Theis
 # Permission to use and modify with proper attribution
 # (Apache License version 2.0)
@@ -58,7 +58,6 @@ class Solve_w_ECOS:
         self.reltol_inacc  = None
         self.max_iters     = None
         self.verbose       = False
-        self.ourzero       = -1.e-8
 
         # Data for ECOS
         self.c            = None
@@ -245,24 +244,25 @@ class Solve_w_ECOS:
                 r = self.sol_rpq[r_vidx(i)]
                 p = self.sol_rpq[p_vidx(i)]
                 q = self.sol_rpq[q_vidx(i)]
-                if (q < 0 and q > self.ourzero):
+                if q < 0:
                     print("A q is negative:"+str(q))
-                    self.sol_rpq[q_vidx(i)] = -self.sol_rpq[q_vidx(i)]
-                    q = -q
-                else:
-                    assert q > 0, "A q is negative:"+str(q)
-                if (p < 0 and p > self.ourzero):
+                    assert q > -1.e-8, "A q is very very negative:"+str(q)
+                    q = 0
+                #^ if
+                if p < 0:
                     print("A p is neagtive:"+str(p))
-                    self.sol_rpq[p_vidx(i)] = -self.sol_rpq[p_vidx(i)]
-                    p = -p
-                else:
-                    assert p > 0, "A p is negative:"+str(p)
-                if r >q*ln(p/q) + 1.e-6:
-                    diff = r - q*ln(p/q)
-                    print("the difference is "+str(diff)+"\n")
-                    print("the variable index is"+str(i))
-                #assert r <= q*ln(p/q)+1.e-6, "A expcone-ieq is violated"
-                if r < q*ln(p/q)-1.e-2: print("This is weird: large difference ",exp(r/q) - p/q," between exp(r/q) and p/q")
+                    assert q > -1.e-8, "A p is very very negative:"+str(p)
+                    p = 0
+                #^ if
+                r_neg = None
+                if q > 0:   r_neg =  q*ln(p/q) - r
+                else:       r_neg = -r
+                if r_neg < -1.e-8:
+                    print("An r is on the wrong side of the ieq: r_neg=",r_neg)
+                elif r_neg > 1.e-2:
+                    print("This is weird: large difference ",r_neg," between exp(r/q) and p/q")
+                #^ if/elif
+            #^ for i,xyz
             for y in self.Y:
                 for z in self.Z:
                     mysum = 0.
@@ -353,8 +353,6 @@ class Solve_w_ECOS:
                 if not (x,y) in self.b_xy:  continue
                 for z in self.Z:
                     if (x,y,z) in pdf.keys():
-                        if (pdf[(x,y,z)] < 0 and pdf[(x,y,z)] > self.ourzero):
-                            pdf[(x,y,z)] = -pdf[(x,y,z)]
                         psum += pdf[(x,y,z)]
                     #^ if
                 #^ for z
