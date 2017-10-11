@@ -23,6 +23,7 @@
 from ecos  import solve
 from scipy import sparse
 import numpy as np
+from numpy import linalg as LA
 import math
 from collections import defaultdict
 
@@ -396,6 +397,40 @@ class Solve_w_ECOS:
         return mysum
     #^ condentropy__orig()
 
+    def feas_check(self):
+        # primal feasibility
+        eqn = (self.sol_rpq * self.A.transpose() -self.b)
+        p_norm_2    = LA.norm(eqn)
+        p_norm_inf  = LA.norm(eqn, np.inf)
+        p_norm_1    = LA.norm(eqn, 1)
+
+        p_feas = max(p_norm_2, p_norm_inf, p_norm_1)
+        print("Primal feasibility, "+str(p_feas))
+        
+        # dual feasiblility
+        d_ieqn = np.zeros(len(self.trip_of_idx), dtype = np.double)
+        for (x,y,z) in self.idx_of_trip.keys():
+            i = self.idx_of_trip[(x,y,z)]
+            xy_idx = self.b_xy[(x,y)]
+            xz_idx = self.b_xz[(x,z)] + len(self.b_xy)
+            # Not correct!!!!
+            d_ieqn[i] = self.sol_lambda[xy_idx] + self.sol_lambda[xz_idx] + self.sol_mu[i] - self.c[i]
+        d_ieqn_nonneg = min(-np.amax(d_ieqn), 0)
+        # d_mu_nonneg   = min(-np.amax(self.sol_mu), 0)
+        d_feas        = d_ieqn_nonneg
+        print("Dual Feasibility, "+str(d_feas)) 
+        # strong duality gap
+        obj_val = 0.
+        for i,xyz in enumerate(self.trip_of_idx):
+            obj_val -= self.sol_rpq[r_vidx(i)]
+
+        d_gap = obj_val + np.dot(self.sol_lambda, self.b)
+        print("Strong dualitly, "+str(d_gap))
+
+        return p_feas, d_feas, d_gap
+    #^ feas_check
+                        
+                      
 #^ class Solve_w_ECOS
 
 
@@ -461,7 +496,6 @@ def pid(pdf_dirty, output=0, keep_solver_object=False):
     condent__orig = solver.condentropy__orig(pdf)
     condYmutinf   = solver.condYmutinf()
     condZmutinf   = solver.condZmutinf()
-
     bits = 1/log(2)
 
     return_data = dict()
@@ -470,9 +504,7 @@ def pid(pdf_dirty, output=0, keep_solver_object=False):
     return_data["UIZ"] = ( condYmutinf                                     ) * bits
     return_data["CI"]  = ( condent - condent__orig                         ) * bits
 
-    return_data["Num_err"] = (solver.sol_info["pinf"],
-                              solver.sol_info["dinf"],
-                              solver.sol_info["gap"])
+    return_data["Num_err"] = solver.feas_check()
     return_data["Solver"] = "ECOS http://www.embotech.com/ECOS"
 
     if type(keep_solver_object) is bool  and  keep_solver_object:
