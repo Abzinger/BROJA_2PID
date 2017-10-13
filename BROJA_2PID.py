@@ -408,16 +408,26 @@ class Solve_w_ECOS:
         print("Primal feasibility, "+str(p_feas))
         
         # dual feasiblility
+        idx_of_xy = dict()
+        i = 0
+        for (x,y) in self.b_xy.keys():
+            idx_of_xy[(x,y)] = i
+            i += 1
+        idx_of_xz = dict()
+        i = 0
+        for (x,z) in self.b_xz.keys():
+            idx_of_xz[(x,z)] = i
+            i += 1
+            
         d_ieqn = np.zeros(len(self.trip_of_idx), dtype = np.double)
         for (x,y,z) in self.idx_of_trip.keys():
             i = self.idx_of_trip[(x,y,z)]
-            xy_idx = self.b_xy[(x,y)]
-            xz_idx = self.b_xz[(x,z)] + len(self.b_xy)
-            # Not correct!!!!
-            d_ieqn[i] = self.sol_lambda[xy_idx] + self.sol_lambda[xz_idx] + self.sol_mu[i] - self.c[i]
-        d_ieqn_nonneg = min(-np.amax(d_ieqn), 0)
-        # d_mu_nonneg   = min(-np.amax(self.sol_mu), 0)
-        d_feas        = d_ieqn_nonneg
+            xy_idx = len(self.trip_of_idx) + idx_of_xy[(x,y)]
+            xz_idx = len(self.trip_of_idx) + len(self.b_xy) + idx_of_xz[(x,z)]
+            d_ieqn[i] = self.sol_lambda[xy_idx] + self.sol_lambda[xz_idx] - self.sol_lambda[i] - 1 - ln(-self.sol_lambda[i])
+        print("dual_ieq", d_ieqn)
+        d_feas = min(-np.amax(d_ieqn), 0)
+        
         print("Dual Feasibility, "+str(d_feas)) 
         # strong duality gap
         obj_val = 0.
