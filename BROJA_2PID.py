@@ -252,11 +252,11 @@ class Solve_w_ECOS:
                 #^ if
                 if p < 0:
                     print("WARNING: A p is neagtive:"+str(p))
-                    assert q > -1.e-8, "A p is very very negative:"+str(p)
+                    assert p > -1.e-8, "A p is very very negative:"+str(p)
                     p = 0
                 #^ if
                 r_neg = None
-                if q > 0:   r_neg =  q*ln(p/q) - r
+                if q > 0 and p > 0:   r_neg =  q*ln(p/q) - r
                 else:       r_neg = -r
                 if r_neg < -1.e-8:
                     print("WARNING: An r is on the wrong side of the ieq: r_neg=",r_neg)
@@ -374,7 +374,7 @@ class Solve_w_ECOS:
                     if i > 0 : marg_x += self.sol_rpq[i]
                 for i in q_list:
                     q = self.sol_rpq[i]
-                    if q > 0: mysum -= q*log(q/marg_x)
+                    if q > 0 and marg_x > 0: mysum -= q*log(q/marg_x)
                 #^ for i
             #^ for z
         #^ for y
@@ -422,10 +422,22 @@ class Solve_w_ECOS:
         d_ieqn = np.zeros(len(self.trip_of_idx), dtype = np.double)
         for (x,y,z) in self.idx_of_trip.keys():
             i = self.idx_of_trip[(x,y,z)]
+            # print("idx of", (x,y,z))
+            # print("is "+str(i)+" and prob is "+str(self.sol_rpq[q_vidx(i)]))
             xy_idx = len(self.trip_of_idx) + idx_of_xy[(x,y)]
             xz_idx = len(self.trip_of_idx) + len(self.b_xy) + idx_of_xz[(x,z)]
-            d_ieqn[i] = self.sol_lambda[xy_idx] + self.sol_lambda[xz_idx] - self.sol_lambda[i] - 1 - ln(-self.sol_lambda[i])
+            # print("idx xy", xy_idx)
+            # print("idx xz", xz_idx)
+            d_ieqn[i] = self.sol_lambda[xy_idx] + self.sol_lambda[xz_idx] + self.sol_lambda[i] - 1 - ln(-self.sol_lambda[i])
+            # print(str(-self.sol_lambda[xy_idx])+" + "+str(-self.sol_lambda[xz_idx])+" + "+str(-self.sol_lambda[i])+" + "+str(-1)+" + "+str(-ln(-self.sol_lambda[i]))+" = "+str(d_ieqn[i]))
+                        
         print("dual_ieq", d_ieqn)
+        # print("lambda", self.sol_lambda)
+        # print("b", self.b)
+        # print("b_xy", self.b_xy)
+        # print("b_xz", self.b_xz)
+        # print("sol", self.sol_rpq)
+        # print("dual", self.sol_lambda)
         d_feas = min(-np.amax(d_ieqn), 0)
         
         print("Dual Feasibility, "+str(d_feas)) 
