@@ -408,45 +408,38 @@ class Solve_w_ECOS:
         print("Primal feasibility, "+str(p_feas))
         
         # dual feasiblility
-        idx_of_xy = dict()
-        i = 0
-        for (x,y) in self.b_xy.keys():
-            idx_of_xy[(x,y)] = i
-            i += 1
-        idx_of_xz = dict()
-        i = 0
-        for (x,z) in self.b_xz.keys():
-            idx_of_xz[(x,z)] = i
-            i += 1
+        # idx_of_xy = dict()
+        # i = 0
+        # for (x,y) in self.b_xy.keys():
+        #     idx_of_xy[(x,y)] = i
+        #     i += 1
+        # idx_of_xz = dict()
+        # i = 0
+        # for (x,z) in self.b_xz.keys():
+        #     idx_of_xz[(x,z)] = i
+        #     i += 1
             
-        d_ieqn = np.zeros(len(self.trip_of_idx), dtype = np.double)
-        for (x,y,z) in self.idx_of_trip.keys():
-            i = self.idx_of_trip[(x,y,z)]
-            # print("idx of", (x,y,z))
-            # print("is "+str(i)+" and prob is "+str(self.sol_rpq[q_vidx(i)]))
-            xy_idx = len(self.trip_of_idx) + idx_of_xy[(x,y)]
-            xz_idx = len(self.trip_of_idx) + len(self.b_xy) + idx_of_xz[(x,z)]
-            # print("idx xy", xy_idx)
-            # print("idx xz", xz_idx)
-            d_ieqn[i] = self.sol_lambda[xy_idx] + self.sol_lambda[xz_idx] + self.sol_lambda[i] - 1 - ln(-self.sol_lambda[i])
-            # print(str(-self.sol_lambda[xy_idx])+" + "+str(-self.sol_lambda[xz_idx])+" + "+str(-self.sol_lambda[i])+" + "+str(-1)+" + "+str(-ln(-self.sol_lambda[i]))+" = "+str(d_ieqn[i]))
+        # d_ieqn = np.zeros(len(self.trip_of_idx), dtype = np.double)
+        # for (x,y,z) in self.idx_of_trip.keys():
+        #     i = self.idx_of_trip[(x,y,z)]
+        #     xy_idx = len(self.trip_of_idx) + idx_of_xy[(x,y)]
+        #     xz_idx = len(self.trip_of_idx) + len(self.b_xy) + idx_of_xz[(x,z)]
+        #     d_ieqn[i] = -ln(self.sol_lambda[xy_idx] + self.sol_lambda[xz_idx] + self.sol_lambda[i]) - 1 +self.sol_lambda[i]
                         
-        print("dual_ieq", d_ieqn)
-        # print("lambda", self.sol_lambda)
-        # print("b", self.b)
-        # print("b_xy", self.b_xy)
-        # print("b_xz", self.b_xz)
-        # print("sol", self.sol_rpq)
-        # print("dual", self.sol_lambda)
-        d_feas = min(-np.amax(d_ieqn), 0)
+        for i,xyz in enumerate(self.trip_of_idx):
+            assert abs(self.sol_mu[r_vidx(i)] + 1) < 1.e-8 , print("r is violated")
+            assert self.sol_mu[p_vidx(i)] > 0 , print("p is violated")
         
+        # d_feas = max(abs(self.sol_mu[r_vidx(i)] + 1), min(-np.amax(d_ieqn), 0))
+        d_feas = abs(self.sol_mu[r_vidx(i)] + 1) 
         print("Dual Feasibility, "+str(d_feas)) 
+
         # strong duality gap
         obj_val = 0.
         for i,xyz in enumerate(self.trip_of_idx):
             obj_val -= self.sol_rpq[r_vidx(i)]
 
-        d_gap = obj_val + np.dot(self.sol_lambda, self.b)
+        d_gap = abs(obj_val + np.dot(self.sol_lambda, self.b))
         print("Strong dualitly, "+str(d_gap))
 
         return p_feas, d_feas, d_gap
