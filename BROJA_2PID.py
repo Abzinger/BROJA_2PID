@@ -405,56 +405,37 @@ class Solve_w_ECOS:
         p_norm_2    = LA.norm(eqn)
         p_norm_inf  = LA.norm(eqn, np.inf)
         p_norm_1    = LA.norm(eqn, 1)
-
+        
         p_feas = max(p_norm_2, p_norm_inf, p_norm_1)
-        print("Primal feasibility, "+str(p_feas))
         
         # dual feasiblility
 
-############################################################################
         idx_of_xy = dict()
         i = 0
         for (x,y) in self.b_xy.keys():
             idx_of_xy[(x,y)] = i
             i += 1
-        print("xy order", idx_of_xy)
+        
         idx_of_xz = dict()
         i = 0
         for (x,z) in self.b_xz.keys():
             idx_of_xz[(x,z)] = i
             i += 1
-        print("xz order", idx_of_xz)
+            
         d_ieqn = np.zeros(len(self.trip_of_idx), dtype = np.double)
         for (x,y,z) in self.idx_of_trip.keys():
             i = self.idx_of_trip[(x,y,z)]
             xy_idx = len(self.trip_of_idx) + idx_of_xy[(x,y)]
             xz_idx = len(self.trip_of_idx) + len(self.b_xy) + idx_of_xz[(x,z)]
-            # d_ieqn[i] = -ln(self.sol_lambda[xy_idx] + self.sol_lambda[xz_idx] + self.sol_lambda[i]) - 1 +self.sol_lambda[i]
-            d_ieqn[i] = self.sol_lambda[xy_idx] + self.sol_lambda[xz_idx] + self.sol_lambda[i]
-            print("(x,y):= ("+str(x)+", "+str(y)+")/ xy_idx"+str(xy_idx))
-            print("(x,z):= ("+str(x)+", "+str(z)+")/ xy_idx"+str(xz_idx))
-            print("iequality "+str(i)+" value is "+str(d_ieqn[i]))
-            
+            d_ieqn[i] = -ln( self.sol_lambda[xy_idx] + self.sol_lambda[xz_idx] + LA.norm(self.sol_lambda,1) ) - 1 + self.sol_lambda[i]
 
+        d_feas = min(-np.amax(d_ieqn), 0)
         
-############################################################################
-        for i,xyz in enumerate(self.trip_of_idx):
-            assert abs(self.sol_mu[r_vidx(i)] + 1) < 1.e-8 , print("r is violated")
-            assert self.sol_mu[p_vidx(i)] > 0 , print("p is violated")
-        
-        # d_feas = max(abs(self.sol_mu[r_vidx(i)] + 1), min(-np.amax(d_ieqn), 0))
-        d_feas = abs(self.sol_mu[r_vidx(i)] + 1) 
-        print("Dual Feasibility, "+str(d_feas)) 
+        # for i,xyz in enumerate(self.trip_of_idx):
+        #     assert abs(self.sol_mu[r_vidx(i)] + 1) < 1.e-8 , print("r is violated")
+        #     assert self.sol_mu[p_vidx(i)] > 0 , print("p is violated"
 
-        # strong duality gap
-        obj_val = 0.
-        for i,xyz in enumerate(self.trip_of_idx):
-            obj_val -= self.sol_rpq[r_vidx(i)]
-
-        d_gap = abs(obj_val + )
-        print("Strong dualitly, "+str(d_gap))
-
-        return p_feas, d_feas, d_gap
+        return p_feas, d_feas
     #^ feas_check
                         
                       
@@ -532,8 +513,9 @@ def pid(pdf_dirty, output=0, keep_solver_object=False):
     return_data["UIZ"] = ( condYmutinf                                     ) * bits
     return_data["CI"]  = ( condent - condent__orig                         ) * bits
 
+    return_data["Num_err"] = (solver.feas_check()[0], solver.feas_check()[1], condent*ln(2) - dual_val)
+
     
-    return_data["Num_err"] = (solver.feas_check(), condent - condent_orig + dual_val) 
     return_data["Solver"] = "ECOS http://www.embotech.com/ECOS"
 
     if type(keep_solver_object) is bool  and  keep_solver_object:
