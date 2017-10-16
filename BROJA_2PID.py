@@ -371,10 +371,10 @@ class Solve_w_ECOS:
                 marg_x = 0.
                 q_list = [ q_vidx(self.idx_of_trip[ (x,y,z) ]) for x in self.X if (x,y,z) in self.idx_of_trip.keys()]
                 for i in q_list:
-                    if i > 0 : marg_x += self.sol_rpq[i]
+                    if i > 0 : marg_x += max(0,self.sol_rpq[i])
                 for i in q_list:
                     q = self.sol_rpq[i]
-                    if q > 0 and marg_x > 0: mysum -= q*log(q/marg_x)
+                    if q > 0: mysum -= q*log(q/marg_x)
                 #^ for i
             #^ for z
         #^ for y
@@ -397,6 +397,8 @@ class Solve_w_ECOS:
         return mysum
     #^ condentropy__orig()
 
+    def dual_val(self): return np.dot(self.sol_lambda, self.b)
+    
     def feas_check(self):
         # primal feasibility
         eqn = (self.sol_rpq * self.A.transpose() -self.b)
@@ -408,24 +410,34 @@ class Solve_w_ECOS:
         print("Primal feasibility, "+str(p_feas))
         
         # dual feasiblility
-        # idx_of_xy = dict()
-        # i = 0
-        # for (x,y) in self.b_xy.keys():
-        #     idx_of_xy[(x,y)] = i
-        #     i += 1
-        # idx_of_xz = dict()
-        # i = 0
-        # for (x,z) in self.b_xz.keys():
-        #     idx_of_xz[(x,z)] = i
-        #     i += 1
+
+############################################################################
+        idx_of_xy = dict()
+        i = 0
+        for (x,y) in self.b_xy.keys():
+            idx_of_xy[(x,y)] = i
+            i += 1
+        print("xy order", idx_of_xy)
+        idx_of_xz = dict()
+        i = 0
+        for (x,z) in self.b_xz.keys():
+            idx_of_xz[(x,z)] = i
+            i += 1
+        print("xz order", idx_of_xz)
+        d_ieqn = np.zeros(len(self.trip_of_idx), dtype = np.double)
+        for (x,y,z) in self.idx_of_trip.keys():
+            i = self.idx_of_trip[(x,y,z)]
+            xy_idx = len(self.trip_of_idx) + idx_of_xy[(x,y)]
+            xz_idx = len(self.trip_of_idx) + len(self.b_xy) + idx_of_xz[(x,z)]
+            # d_ieqn[i] = -ln(self.sol_lambda[xy_idx] + self.sol_lambda[xz_idx] + self.sol_lambda[i]) - 1 +self.sol_lambda[i]
+            d_ieqn[i] = self.sol_lambda[xy_idx] + self.sol_lambda[xz_idx] + self.sol_lambda[i]
+            print("(x,y):= ("+str(x)+", "+str(y)+")/ xy_idx"+str(xy_idx))
+            print("(x,z):= ("+str(x)+", "+str(z)+")/ xy_idx"+str(xz_idx))
+            print("iequality "+str(i)+" value is "+str(d_ieqn[i]))
             
-        # d_ieqn = np.zeros(len(self.trip_of_idx), dtype = np.double)
-        # for (x,y,z) in self.idx_of_trip.keys():
-        #     i = self.idx_of_trip[(x,y,z)]
-        #     xy_idx = len(self.trip_of_idx) + idx_of_xy[(x,y)]
-        #     xz_idx = len(self.trip_of_idx) + len(self.b_xy) + idx_of_xz[(x,z)]
-        #     d_ieqn[i] = -ln(self.sol_lambda[xy_idx] + self.sol_lambda[xz_idx] + self.sol_lambda[i]) - 1 +self.sol_lambda[i]
-                        
+
+        
+############################################################################
         for i,xyz in enumerate(self.trip_of_idx):
             assert abs(self.sol_mu[r_vidx(i)] + 1) < 1.e-8 , print("r is violated")
             assert self.sol_mu[p_vidx(i)] > 0 , print("p is violated")
@@ -439,7 +451,7 @@ class Solve_w_ECOS:
         for i,xyz in enumerate(self.trip_of_idx):
             obj_val -= self.sol_rpq[r_vidx(i)]
 
-        d_gap = abs(obj_val + np.dot(self.sol_lambda, self.b))
+        d_gap = abs(obj_val + )
         print("Strong dualitly, "+str(d_gap))
 
         return p_feas, d_feas, d_gap
@@ -511,6 +523,7 @@ def pid(pdf_dirty, output=0, keep_solver_object=False):
     condent__orig = solver.condentropy__orig(pdf)
     condYmutinf   = solver.condYmutinf()
     condZmutinf   = solver.condZmutinf()
+    dual_val      = solver.dual_val()
     bits = 1/log(2)
 
     return_data = dict()
@@ -519,7 +532,8 @@ def pid(pdf_dirty, output=0, keep_solver_object=False):
     return_data["UIZ"] = ( condYmutinf                                     ) * bits
     return_data["CI"]  = ( condent - condent__orig                         ) * bits
 
-    return_data["Num_err"] = solver.feas_check()
+    
+    return_data["Num_err"] = (solver.feas_check(), condent - condent_orig + dual_val) 
     return_data["Solver"] = "ECOS http://www.embotech.com/ECOS"
 
     if type(keep_solver_object) is bool  and  keep_solver_object:
