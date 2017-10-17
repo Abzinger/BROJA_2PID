@@ -405,9 +405,11 @@ class Solve_w_ECOS:
         p_norm_2    = LA.norm(eqn)
         p_norm_inf  = LA.norm(eqn, np.inf)
         p_norm_1    = LA.norm(eqn, 1)
-        
-        p_feas = max(p_norm_2, p_norm_inf, p_norm_1)
-        
+
+        q_nonneg = max(-np.amin(self.sol_rpq), 0)
+
+        p_feas = max(p_norm_2, p_norm_inf, p_norm_1, q_nonneg)
+
         # dual feasiblility
 
         idx_of_xy = dict()
@@ -513,7 +515,7 @@ def pid(pdf_dirty, output=0, keep_solver_object=False):
     return_data["UIZ"] = ( condYmutinf                                     ) * bits
     return_data["CI"]  = ( condent - condent__orig                         ) * bits
 
-    return_data["Num_err"] = (solver.feas_check()[0], solver.feas_check()[1], condent*ln(2) - dual_val)
+    return_data["Num_err"] = (solver.feas_check()[0], solver.feas_check()[1], abs(condent*ln(2) - dual_val))
 
     
     return_data["Solver"] = "ECOS http://www.embotech.com/ECOS"
