@@ -179,3 +179,28 @@ print("UNQ gate (dirty): ",      pid(dirty_unqgate, keep_solver_object=True) )
 print("RDNXOR gate (dirty): ",   pid(dirty_rdnxorgate, keep_solver_object=True) )
 print("RDNUNQXOR gate (dirty): ",pid(dirty_rdnunqxorgate, keep_solver_object=True) )
 print("XORAND gate (dirty): ",   pid(dirty_xorandgate, keep_solver_object=True) )
+
+# Check correctness
+
+print("Check results")
+print("=============")
+print("AND gate:       CI - true_CI = ", pid(andgate)["CI"] - .5)
+print("                SI - true_SI = ", pid(andgate)["SI"] - .311278124459132843017578125)
+
+print("XOR gate:       CI - true_CI = ", pid(xorgate)["CI"] - 1.)
+print("                SI - true_SI = ", pid(xorgate)["SI"] - 0.)
+
+print("RDN gate:       CI - true_CI = ", pid(rdngate)["CI"] - 0.)
+print("                SI - true_SI = ", pid(rdngate)["SI"] - 1.)
+
+print("UNQ gate:       CI - true_CI = ", pid(unqgate)["CI"] - 0.)
+print("                SI - true_SI = ", pid(unqgate)["SI"] - 0.)
+
+print("RDNXOR gate:    CI - true_CI = ", pid(rdnxorgate)["CI"] - 1.)
+print("                SI - true_SI = ", pid(rdnxorgate)["SI"] - 1.)
+
+print("RDNUNQXOR gate: CI - true_CI = ", pid(rdnunqxorgate)["CI"] - 1.)
+print("                SI - true_SI = ", pid(rdnunqxorgate)["SI"] - 1.)
+
+print("XORAND gate:    CI - true_CI = ", pid(xorandgate)["CI"] - 1.)
+print("                SI - true_SI = ", pid(xorandgate)["SI"] - .5)
