@@ -254,10 +254,12 @@ class Solve_w_ECOS:
                     zysum = 0.
                     for x in self.X:
                         if (x,y,z) in self.idx_of_trip.keys():
-                            q = max(0, self.sol_rpq[ q_vidx(self.idx_of_trip[ (x,y,z) ]) ])
-                            zysum += q
-                            self.marg_y[ y ] += q
-                            self.marg_z[ z ] += q
+                            q = self.sol_rpq[ q_vidx(self.idx_of_trip[ (x,y,z) ]) ]
+                            if q>0:
+                                zysum += q
+                                self.marg_y[ y ] += q
+                                self.marg_z[ z ] += q
+                            #^ if q>0
                         #^if
                     #^ for x
                     if zysum > 0. :    self.marg_yz[ (y,z) ] = zysum
