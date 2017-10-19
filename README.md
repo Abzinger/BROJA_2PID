@@ -33,10 +33,9 @@ If you make significant modifications but stick to the approach based on the sam
   title =        {Bivariate Partial Information Decomposition: The Optimization Perspective},
   journal =      {Entropy},
   year =         2017,
-  key =       {key},
-  volume =    {vol},
-  number =    {nr},
-  pages =     {1--2}
+  volume =    {19},
+  number =    {10},
+  pages =     {530}
 }
 ```
 In addition, if you use another Exponential Cone Programming model, one that resembles one of the models in Makkeh's PhD thesis, please cite his thesis.

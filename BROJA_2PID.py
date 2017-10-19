@@ -9,7 +9,7 @@
 # Information about the algorithm, documentation, and examples are here:
 # @Article{makkeh-theis-vicente:pidOpt:2017,
 #          author =       {Makkeh, Abdullah and Theis, Dirk Oliver and Vicente, Raul},
-#          title =        {BROJA-2PID: A cone programming based Partial Information Decomposition estimator},
+#          title =        {BROJA-2PID: A cone-programming based Partial Information Decomposition estimator},
 #          journal =      {jo},
 #          year =         2017,
 #          key =       {key},
