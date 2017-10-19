@@ -370,8 +370,8 @@ class Solve_w_ECOS:
         #^ for
         max_violation_of_eqn = 0.
         # xy* - marginals:
-        for xy in b_xy.keys():
-            mysum = b_xy[xy]
+        for xy in self.b_xy.keys():
+            mysum = self.b_xy[xy]
             for z in self.Z:
                 x,y = xy
                 if (x,y,z) in self.idx_of_trip.keys():
@@ -383,8 +383,8 @@ class Solve_w_ECOS:
             max_violation_of_eqn = max( max_violation_of_eqn, abs(mysum) )
         #^ fox xy
         # x*z - marginals:
-        for xz in b_xz.keys():
-            mysum = b_xz[xz]
+        for xz in self.b_xz.keys():
+            mysum = self.b_xz[xz]
             for y in self.Y:
                 x,z = xz
                 if (x,y,z) in self.idx_of_trip.keys():
@@ -396,7 +396,7 @@ class Solve_w_ECOS:
             max_violation_of_eqn = max( max_violation_of_eqn, abs(mysum) )
         #^ fox xz
 
-        primal_infeasibility = max(max_violation_of_eqn,max_q_negativity)
+        primal_infeasability = max(max_violation_of_eqn,max_q_negativity)
         
         # Dual infeasiblility
         # -------------------
