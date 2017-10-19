@@ -266,7 +266,7 @@ class Solve_w_ECOS:
                 #^ for z
             #^ for y
         #^ if ∄ marg_yz
-    #^ provide_marg_yz()
+    #^ provide_marginals()
 
     def condYmutinf(self):
         self.provide_marginals()
@@ -279,7 +279,7 @@ class Solve_w_ECOS:
                     if (x,y,z) in self.idx_of_trip.keys():
                         i = q_vidx(self.idx_of_trip[ (x,y,z) ])
                         q = self.sol_rpq[i]
-                        if q > 0 : mysum += q*log( q * self.marg_y[y] / ( self.b_xy[ (x,y) ] * self.marg_yz[ (y,z) ] ) )
+                        if q > 0:  mysum += q*log( q * self.marg_y[y] / ( self.b_xy[ (x,y) ] * self.marg_yz[ (y,z) ] ) )
                     #^ if
                 #^ for i
             #^ for z
@@ -298,7 +298,7 @@ class Solve_w_ECOS:
                     if (x,y,z) in self.idx_of_trip.keys():
                         i = q_vidx(self.idx_of_trip[ (x,y,z) ])
                         q = self.sol_rpq[i]
-                        if q > 0: mysum += q*log( q * self.marg_z[z] / ( self.b_xz[ (x,z) ] * self.marg_yz[ (y,z) ] ) )
+                        if q > 0:  mysum += q*log( q * self.marg_z[z] / ( self.b_xz[ (x,z) ] * self.marg_yz[ (y,z) ] ) )
                     #^ if
                 #^ for z
             #^ for y
@@ -331,10 +331,10 @@ class Solve_w_ECOS:
                 marg_x = 0.
                 q_list = [ q_vidx(self.idx_of_trip[ (x,y,z) ]) for x in self.X if (x,y,z) in self.idx_of_trip.keys()]
                 for i in q_list:
-                    if i > 0 : marg_x += max(0,self.sol_rpq[i])
+                    marg_x += max(0,self.sol_rpq[i])
                 for i in q_list:
                     q = self.sol_rpq[i]
-                    if q > 0: mysum -= q*log(q/marg_x)
+                    if q > 0:  mysum -= q*log(q/marg_x)
                 #^ for i
             #^ for z
         #^ for y
@@ -350,57 +350,81 @@ class Solve_w_ECOS:
                 for x in x_list: marg += pdf[(x,y,z)]
                 for x in x_list:
                     p = pdf[(x,y,z)]
-                    if p>0: mysum -= p*log(p/marg)
+                    mysum -= p*log(p/marg)
                 #^ for xyz
             #^ for z
         #^ for y
         return mysum
     #^ condentropy__orig()
 
-    def dual_val(self): return np.dot(self.sol_lambda, self.b)
+    def dual_value(self):
+        return np.dot(self.sol_lambda, self.b)
+    #^ dual_value()
     
-    def feas_check(self):
-        # primal feasibility
-        eqn = (self.sol_rpq * self.A.transpose() -self.b)
-        p_norm_2    = LA.norm(eqn)
-        p_norm_inf  = LA.norm(eqn, np.inf)
-        p_norm_1    = LA.norm(eqn, 1)
+    def check_feasibility(self): # returns pair (p,d) of primal/dual infeasibility (maxima)
+        # Primal infeasiblility
+        # ---------------------
+        max_q_negativity = 0.
+        for i in range(len(self.trip_of_idx)):
+            max_q_negativity = max(max_q_negativity, -self.sol_rpq[q_vidx(i)])
+        #^ for
+        max_violation_of_eqn = 0.
+        # xy* - marginals:
+        for xy in b_xy.keys():
+            mysum = b_xy[xy]
+            for z in self.Z:
+                x,y = xy
+                if (x,y,z) in self.idx_of_trip.keys():
+                    i = self.idx_of_trip[(x,y,z)]
+                    q = max(0., self.sol_rpq[q_vidx(i)])
+                    mysum -= q
+                #^ if
+            #^ for z
+            max_violation_of_eqn = max( max_violation_of_eqn, abs(mysum) )
+        #^ fox xy
+        # x*z - marginals:
+        for xz in b_xz.keys():
+            mysum = b_xz[xz]
+            for y in self.Y:
+                x,z = xz
+                if (x,y,z) in self.idx_of_trip.keys():
+                    i = self.idx_of_trip[(x,y,z)]
+                    q = max(0., self.sol_rpq[q_vidx(i)])
+                    mysum -= q
+                #^ if
+            #^ for z
+            max_violation_of_eqn = max( max_violation_of_eqn, abs(mysum) )
+        #^ fox xz
 
-        q_nonneg = max(-np.amin(self.sol_rpq), 0)
-
-        p_feas = max(p_norm_2, p_norm_inf, p_norm_1, q_nonneg)
-
-        # dual feasiblility
-
+        primal_infeasibility = max(max_violation_of_eqn,max_q_negativity)
+        
+        # Dual infeasiblility
+        # -------------------
         idx_of_xy = dict()
         i = 0
         for (x,y) in self.b_xy.keys():
             idx_of_xy[(x,y)] = i
             i += 1
-        
+        #^ for
+
         idx_of_xz = dict()
         i = 0
         for (x,z) in self.b_xz.keys():
             idx_of_xz[(x,z)] = i
             i += 1
-            
-        d_ieqn = np.zeros(len(self.trip_of_idx), dtype = np.double)
-        for (x,y,z) in self.idx_of_trip.keys():
-            i = self.idx_of_trip[(x,y,z)]
+        #^ for
+
+        dual_infeasability = 0.
+        for i,xyz in enumerate(self.trip_of_idx):
+            x,y,z = xyz
             xy_idx = len(self.trip_of_idx) + idx_of_xy[(x,y)]
             xz_idx = len(self.trip_of_idx) + len(self.b_xy) + idx_of_xz[(x,z)]
-            d_ieqn[i] = -ln( self.sol_lambda[xy_idx] + self.sol_lambda[xz_idx] + LA.norm(self.sol_lambda,1) ) - 1 + self.sol_lambda[i]
+            dual_infeasability = max( dual_infeasability,  -ln( self.sol_lambda[xy_idx] + self.sol_lambda[xz_idx] + LA.norm(self.sol_lambda,1) ) - 1 + self.sol_lambda[i] )
+        #^ for
 
-        d_feas = min(-np.amax(d_ieqn), 0)
-        
-        # for i,xyz in enumerate(self.trip_of_idx):
-        #     assert abs(self.sol_mu[r_vidx(i)] + 1) < 1.e-8 , print("r is violated")
-        #     assert self.sol_mu[p_vidx(i)] > 0 , print("p is violated"
+        return primal_infeasability, dual_infeasability
+    #^ check_feasibility()
 
-        return p_feas, d_feas
-    #^ feas_check
-                        
-                      
 #^ class Solve_w_ECOS
 
 
@@ -466,7 +490,7 @@ def pid(pdf_dirty, output=0, keep_solver_object=False):
     condent__orig = solver.condentropy__orig(pdf)
     condYmutinf   = solver.condYmutinf()
     condZmutinf   = solver.condZmutinf()
-    dual_val      = solver.dual_val()
+    dual_val      = solver.dual_value()
     bits = 1/log(2)
 
     return_data = dict()
@@ -475,10 +499,8 @@ def pid(pdf_dirty, output=0, keep_solver_object=False):
     return_data["UIZ"] = ( condYmutinf                                     ) * bits
     return_data["CI"]  = ( condent - condent__orig                         ) * bits
 
-    feas_info = solver.feas_check()
-    return_data["Num_err"] = (feas_info[0], feas_info[1], abs(condent*ln(2) - dual_val))
-
-    
+    primal_infeas,dual_infeas = solver.check_feasibility()
+    return_data["Num_err"] = (primal_infeas, dual_infeas, abs(condent*ln(2) - dual_val))
     return_data["Solver"] = "ECOS http://www.embotech.com/ECOS"
 
     if type(keep_solver_object) is bool  and  keep_solver_object:
