@@ -12,7 +12,7 @@ The details of the implementation, user interface, and example code are describe
 (currently in preparation).
 
 #### If you use this software...
-We ask that you give proper reference.
+...we ask that you give proper reference.
 If you use it with only small modifications (note the Apache 2.0 license), use 
 ```
 @Article{makkeh-theis-vicente:pidOpt:2017,
@@ -35,7 +35,8 @@ If you make significant modifications but stick to the approach based on the sam
   year =         2017,
   volume =    {19},
   number =    {10},
-  pages =     {530}
+  pages =     {530},
+  note    = {\url{http://dx.doi.org/10.3390/e19100530}}
 }
 ```
 In addition, if you use another Exponential Cone Programming model, one that resembles one of the models in Makkeh's PhD thesis, please cite his thesis.
