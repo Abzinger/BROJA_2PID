@@ -515,7 +515,8 @@ def pid(pdf_dirty, output=0, keep_solver_object=False):
     return_data["UIZ"] = ( condYmutinf                                     ) * bits
     return_data["CI"]  = ( condent - condent__orig                         ) * bits
 
-    return_data["Num_err"] = (solver.feas_check()[0], solver.feas_check()[1], abs(condent*ln(2) - dual_val))
+    feas_info = solver.feas_check()
+    return_data["Num_err"] = (feas_info[0], feas_info[1], abs(condent*ln(2) - dual_val))
 
     
     return_data["Solver"] = "ECOS http://www.embotech.com/ECOS"
