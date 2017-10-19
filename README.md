@@ -39,4 +39,3 @@ If you make significant modifications but stick to the approach based on the sam
   note    = {\url{http://dx.doi.org/10.3390/e19100530}}
 }
 ```
-In addition, if you use another Exponential Cone Programming model, one that resembles one of the models in Makkeh's PhD thesis, please cite his thesis.
