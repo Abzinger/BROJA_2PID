@@ -12,7 +12,7 @@ The details of the implementation, user interface, and example code are describe
 (currently in preparation).
 
 #### If you use this software...
-We ask that you give proper reference.
+...we ask that you give proper reference.
 If you use it with only small modifications (note the Apache 2.0 license), use 
 ```
 @Article{makkeh-theis-vicente:pidOpt:2017,
