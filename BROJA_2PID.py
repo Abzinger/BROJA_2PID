@@ -9,7 +9,7 @@
 # Information about the algorithm, documentation, and examples are here:
 # @Article{makkeh-theis-vicente:pidOpt:2017,
 #          author =       {Makkeh, Abdullah and Theis, Dirk Oliver and Vicente, Raul},
-#          title =        {BROJA-2PID: A cone-programming based Partial Information Decomposition estimator},
+#          title =        {BROJA-2PID: A cone programming based Partial Information Decomposition estimator},
 #          journal =      {jo},
 #          year =         2017,
 #          key =       {key},
@@ -473,11 +473,11 @@ def pid(pdf_dirty, output=0, keep_solver_object=False):
     if output > 1: solver.verbose = True
     retval = solver.solve()
     if retval != "success":
-        print("\nCone Programming solver failed to find (near) optimal solution.\nPlease report the input probability density function to dotheis@ut.ee\n")
+        print("\nCone Programming solver failed to find (near) optimal solution.\nPlease report the input probability density function to abdullah.makkeh@gmail.com\n")
         if type(keep_solver_object) is bool  and  keep_solver_object:
             return solver
         else:
-            raise BROJA_2PID_Exception("BROJA_2PID_Exception: Cone Programming solver failed to find (near) optimal solution. Please report the input probability density function to dotheis@ut.ee")
+            raise BROJA_2PID_Exception("BROJA_2PID_Exception: Cone Programming solver failed to find (near) optimal solution. Please report the input probability density function to abdullah.makkeh@gmail.com")
         #^ if (keep solver)
     #^ if (solve failure)
 
