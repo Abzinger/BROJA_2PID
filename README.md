@@ -26,7 +26,7 @@ If you use it with only small modifications (note the Apache 2.0 license), use
   pages =     {1--2}
 }
 ```
-If you make significant modifications but stick to the approach based on the same Exponential Cone Programming model, use
+If you make significant modifications but stick to the approach based on the Exponential Cone Programming model, use
 ```
 @Article{makkeh-theis-vicente:pidOpt:2017,
   author =       {Makkeh, Abdullah and Theis, Dirk Oliver and Vicente, Raul},
