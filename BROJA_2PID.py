@@ -240,7 +240,7 @@ class Solve_w_ECOS:
             self.sol_info   = solution['info']
             return "success"
         else: # "x" not in dict solution
-            return "What the fuck?!??"
+            return "x not in dict solution -- No Solution Found!!!"
         #^ if/esle
     #^ solve()
 
@@ -474,6 +474,7 @@ def pid(pdf_dirty, output=0, keep_solver_object=False):
     retval = solver.solve()
     if retval != "success":
         print("\nCone Programming solver failed to find (near) optimal solution.\nPlease report the input probability density function to abdullah.makkeh@gmail.com\n")
+        # type(keep_solver_object) is bool
         if type(keep_solver_object) is bool  and  keep_solver_object:
             return solver
         else:
