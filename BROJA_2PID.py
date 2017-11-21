@@ -357,6 +357,46 @@ class Solve_w_ECOS:
         return mysum
     #^ condentropy__orig()
 
+    # def I_X_Y(self, pdf):
+    #     # Mutual information I( X ; Y )
+    #     mysum = 0
+    #     marg_x  = defaultdict(lambda: 0.)
+    #     marg_y  = defaultdict(lambda: 0.)    
+    #     for y in self.Y:
+    #         for z in self.Z:
+    #             x_list = [ x  for x in self.X if (x,y,z) in pdf.keys()]
+    #             for x in x_list: marg_x[x] += pdf[(x,y,z)]
+    #     for x in self.X:
+    #         for z in self.Z:
+    #             y_list = [ y  for y in self.Y if (x,y,z) in pdf.keys()]
+    #             for y in y_list: marg_y[y] += pdf[(x,y,z)]
+        
+    #     for xy,t in self.b_xy.items():
+    #         x,y = xy
+    #         if t>0:  mysum += t * log( t / ( marg_x[x]*marg_y[y] ) )
+    #     return mysum
+    # #^ I_X_Y()
+
+    # def I_X_Z(self, pdf):
+    #     # Mutual information I( X ; Z )
+    #     mysum = 0
+    #     marg_x  = defaultdict(lambda: 0.)
+    #     marg_z  = defaultdict(lambda: 0.)    
+    #     for y in self.Y:
+    #         for z in self.Z:
+    #             x_list = [ x  for x in self.X if (x,y,z) in pdf.keys()]
+    #             for x in x_list: marg_x[x] += pdf[(x,y,z)]
+    #     for x in self.X:
+    #         for y in self.Y:
+    #             z_list = [ z  for z in self.Z if (x,y,z) in pdf.keys()]
+    #             for z in z_list: marg_z[z] += pdf[(x,y,z)]
+        
+    #     for xz,t in self.b_xz.items():
+    #         x,z = xz
+    #         if t>0:  mysum += t * log( t / ( marg_x[x]*marg_z[z] ) )
+    #     return mysum
+    # #^ I_X_Z()
+
     def dual_value(self):
         return np.dot(self.sol_lambda, self.b)
     #^ dual_value()
@@ -444,6 +484,59 @@ def marginal_xz(p):
         else:                      marg[(x,z)] =  r
     return marg
 
+def I_X_Y(p):
+    # Mutual information I( X ; Y )
+    mysum   = 0.
+    marg_x  = defaultdict(lambda: 0.)
+    marg_y  = defaultdict(lambda: 0.)
+    b_xy    = marginal_xy(p)
+    for xyz,r in p.items():
+        x,y,z = xyz
+        if r > 0 :
+            marg_x[x] += r
+            marg_y[y] += r
+    
+    for xy,t in b_xy.items():
+        x,y = xy
+        if t > 0:  mysum += t * log( t / ( marg_x[x]*marg_y[y] ) )
+    return mysum
+#^ I_X_Y()
+
+def I_X_Z(p):
+    # Mutual information I( X ; Z )
+    mysum   = 0.
+    marg_x  = defaultdict(lambda: 0.)
+    marg_z  = defaultdict(lambda: 0.)
+    b_xz    = marginal_xz(p)
+    for xyz,r in p.items():
+        x,y,z = xyz
+        if r > 0 :
+            marg_x[x] += r
+            marg_z[z] += r
+    
+    for xz,t in b_xz.items():
+        x,z = xz
+        if t > 0:  mysum += t * log( t / ( marg_x[x]*marg_z[z] ) )
+    return mysum
+#^ I_X_Z()
+
+def I_X_YZ(p):
+    # Mutual information I( X ; Y , Z )
+    mysum    = 0.
+    marg_x   = defaultdict(lambda: 0.)
+    marg_yz  = defaultdict(lambda: 0.)
+    for xyz,r in p.items():
+        x,y,z = xyz
+        if r > 0 :
+            marg_x[x]      += r
+            marg_yz[(y,z)] += r
+    
+    for xyz,t in p.items():
+        x,y,z = xyz
+        if t > 0:  mysum += t * log( t / ( marg_x[x]*marg_yz[(y,z)] ) )
+    return mysum
+#^ I_X_YZ()
+
 def pid(pdf_dirty, output=0, keep_solver_object=False):
     # (c) Abdullah Makkeh, Dirk Oliver Theis
     # Permission to use and modify under Apache License version 2.0
@@ -499,9 +592,9 @@ def pid(pdf_dirty, output=0, keep_solver_object=False):
     return_data["UIY"] = ( condZmutinf                                     ) * bits
     return_data["UIZ"] = ( condYmutinf                                     ) * bits
     return_data["CI"]  = ( condent - condent__orig                         ) * bits
-
+    
     primal_infeas,dual_infeas = solver.check_feasibility()
-    return_data["Num_err"] = (primal_infeas, dual_infeas, abs(condent*ln(2) - dual_val))
+    return_data["Num_err"] = (primal_infeas, dual_infeas, max(condent*ln(2) - dual_val, 0))
     return_data["Solver"] = "ECOS http://www.embotech.com/ECOS"
 
     if type(keep_solver_object) is bool  and  keep_solver_object:
