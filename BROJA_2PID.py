@@ -594,7 +594,7 @@ def pid(pdf_dirty, output=0, keep_solver_object=False):
     return_data["CI"]  = ( condent - condent__orig                         ) * bits
     
     primal_infeas,dual_infeas = solver.check_feasibility()
-    return_data["Num_err"] = (primal_infeas, dual_infeas, max(condent*ln(2) - dual_val, 0))
+    return_data["Num_err"] = (primal_infeas, dual_infeas, max(condent*ln(2) - dual_val, 0.0))
     return_data["Solver"] = "ECOS http://www.embotech.com/ECOS"
 
     if type(keep_solver_object) is bool  and  keep_solver_object:
