@@ -357,48 +357,8 @@ class Solve_w_ECOS:
         return mysum
     #^ condentropy__orig()
 
-    # def I_X_Y(self, pdf):
-    #     # Mutual information I( X ; Y )
-    #     mysum = 0
-    #     marg_x  = defaultdict(lambda: 0.)
-    #     marg_y  = defaultdict(lambda: 0.)    
-    #     for y in self.Y:
-    #         for z in self.Z:
-    #             x_list = [ x  for x in self.X if (x,y,z) in pdf.keys()]
-    #             for x in x_list: marg_x[x] += pdf[(x,y,z)]
-    #     for x in self.X:
-    #         for z in self.Z:
-    #             y_list = [ y  for y in self.Y if (x,y,z) in pdf.keys()]
-    #             for y in y_list: marg_y[y] += pdf[(x,y,z)]
-        
-    #     for xy,t in self.b_xy.items():
-    #         x,y = xy
-    #         if t>0:  mysum += t * log( t / ( marg_x[x]*marg_y[y] ) )
-    #     return mysum
-    # #^ I_X_Y()
-
-    # def I_X_Z(self, pdf):
-    #     # Mutual information I( X ; Z )
-    #     mysum = 0
-    #     marg_x  = defaultdict(lambda: 0.)
-    #     marg_z  = defaultdict(lambda: 0.)    
-    #     for y in self.Y:
-    #         for z in self.Z:
-    #             x_list = [ x  for x in self.X if (x,y,z) in pdf.keys()]
-    #             for x in x_list: marg_x[x] += pdf[(x,y,z)]
-    #     for x in self.X:
-    #         for y in self.Y:
-    #             z_list = [ z  for z in self.Z if (x,y,z) in pdf.keys()]
-    #             for z in z_list: marg_z[z] += pdf[(x,y,z)]
-        
-    #     for xz,t in self.b_xz.items():
-    #         x,z = xz
-    #         if t>0:  mysum += t * log( t / ( marg_x[x]*marg_z[z] ) )
-    #     return mysum
-    # #^ I_X_Z()
-
     def dual_value(self):
-        return np.dot(self.sol_lambda, self.b)
+        return -np.dot(self.sol_lambda, self.b)
     #^ dual_value()
     
     def check_feasibility(self): # returns pair (p,d) of primal/dual infeasibility (maxima)
@@ -442,24 +402,39 @@ class Solve_w_ECOS:
         # -------------------
         idx_of_xy = dict()
         i = 0
-        for (x,y) in self.b_xy.keys():
-            idx_of_xy[(x,y)] = i
-            i += 1
+        for x in self.X:
+            for y in self.Y:
+                if (x,y) in self.b_xy.keys():
+                    idx_of_xy[(x,y)] = i
+                    i += 1
         #^ for
 
         idx_of_xz = dict()
         i = 0
-        for (x,z) in self.b_xz.keys():
-            idx_of_xz[(x,z)] = i
-            i += 1
+        for x in self.X:
+            for z in self.Z:
+                if (x,z) in self.b_xz.keys():
+                    idx_of_xz[(x,z)] = i
+                    i += 1
         #^ for
 
         dual_infeasability = 0.
         for i,xyz in enumerate(self.trip_of_idx):
+            mu_yz = 0.
             x,y,z = xyz
+            # Compute mu_*yz
+            # mu_xyz: dual variable of the coupling constraints
+            for j,uvw in enumerate(self.trip_of_idx):
+                u,v,w = uvw
+                if v == y and w == z:
+                    mu_yz += self.sol_lambda[j]
+
+            # Get indices of dual variables of the marginal constriants
             xy_idx = len(self.trip_of_idx) + idx_of_xy[(x,y)]
             xz_idx = len(self.trip_of_idx) + len(self.b_xy) + idx_of_xz[(x,z)]
-            dual_infeasability = max( dual_infeasability,  -ln( self.sol_lambda[xy_idx] + self.sol_lambda[xz_idx] + LA.norm(self.sol_lambda,1) ) - 1 + self.sol_lambda[i] )
+
+            # Find the most violated dual ieq
+            dual_infeasability = max( dual_infeasability, -self.sol_lambda[xy_idx] - self.sol_lambda[xz_idx] - mu_yz -ln(-self.sol_lambda[i]) - 1)
         #^ for
 
         return primal_infeasability, dual_infeasability
@@ -594,7 +569,7 @@ def pid(pdf_dirty, output=0, keep_solver_object=False):
     return_data["CI"]  = ( condent - condent__orig                         ) * bits
     
     primal_infeas,dual_infeas = solver.check_feasibility()
-    return_data["Num_err"] = (primal_infeas, dual_infeas, max(condent*ln(2) - dual_val, 0.0))
+    return_data["Num_err"] = (primal_infeas, dual_infeas, max(-condent*ln(2) - dual_val, 0.0))
     return_data["Solver"] = "ECOS http://www.embotech.com/ECOS"
 
     if type(keep_solver_object) is bool  and  keep_solver_object:
