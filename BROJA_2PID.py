@@ -51,13 +51,7 @@ class Solve_w_ECOS:
         # Permission to use and modify under Apache License version 2.0
 
         # ECOS parameters
-        self.feastol       = None
-        self.abstol        = None
-        self.reltol        = None
-        self.feastol_inacc = None
-        self.abstol_innac  = None
-        self.reltol_inacc  = None
-        self.max_iters     = None
+        self.ecos_kwargs   = dict()
         self.verbose       = False
 
         # Data for ECOS
@@ -212,25 +206,11 @@ class Solve_w_ECOS:
         # Permission to use and modify under Apache License version 2.0
         self.marg_yz = None # for cond[]mutinf computation below
 
-        kwargs = dict()
-        if self.feastol != None:
-            kwargs["feastol"] = self.feastol
-        if self.abstol != None:
-            kwargs["abstol"] = self.abstol
-        if self.reltol != None:
-            kwargs["reltol"] = self.reltol
-        if self.feastol_inacc != None:
-            kwargs["feastol_inacc"] = self.feastol_inacc
-        if self.abstol_innac != None:
-            kwargs["abstol_innac"] = self.abstol_innac
-        if self.reltol_inacc != None:
-            kwargs["reltol_inacc"] = self.reltol_inacc
-        if self.max_iters != None:
-            kwargs["max_iters"] = self.max_iters
+        self.ecos_kwargs = dict()
         if self.verbose != None:
-            kwargs["verbose"] = self.verbose
+            self.ecos_kwargs["verbose"] = self.verbose
 
-        solution = ecos.solve(self.c, self.G,self.h, self.dims,  self.A,self.b, **kwargs)
+        solution = ecos.solve(self.c, self.G,self.h, self.dims,  self.A,self.b, **self.ecos_kwargs)
 
         if 'x' in solution.keys():
             self.sol_rpq    = solution['x']
@@ -512,10 +492,11 @@ def I_X_YZ(p):
     return mysum
 #^ I_X_YZ()
 
-def pid(pdf_dirty, output=0, keep_solver_object=False):
+def pid(pdf_dirty, cone_solver="ECOS", output=0, keep_solver_object=False, **solver_args):
     # (c) Abdullah Makkeh, Dirk Oliver Theis
     # Permission to use and modify under Apache License version 2.0
     assert type(pdf_dirty) is dict, "broja_2pid.pid(pdf): pdf must be a dictionary"
+    assert cone_solver=="ECOS", "broja_2pid.pid(pdf): We currently don't have an interface for the Cone Solver "+cone_solver+" (only ECOS)."
     if __debug__:
         for k,v in pdf_dirty.items():
             assert type(k) is tuple or type(k) is list,           "broja_2pid.pid(pdf): pdf's keys must be tuples or lists"
@@ -534,11 +515,12 @@ def pid(pdf_dirty, output=0, keep_solver_object=False):
     if output > 0:  print("BROJA_2PID: Preparing Cone Program data",end="...")
     solver = Solve_w_ECOS(by_xy, bz_xz)
     solver.create_model()
+    if output > 1: solver.verbose = True
+    solver.ecos_kwargs = solver_args
     if output > 0: print("done.")
 
     if output == 1: print("BROJA_2PID: Starting solver",end="...")
     if output > 1: print("BROJA_2PID: Starting solver.")
-    if output > 1: solver.verbose = True
     retval = solver.solve()
     if retval != "success":
         print("\nCone Programming solver failed to find (near) optimal solution.\nPlease report the input probability density function to abdullah.makkeh@gmail.com\n")
