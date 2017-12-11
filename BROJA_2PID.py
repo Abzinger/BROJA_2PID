@@ -496,6 +496,7 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     # (c) Abdullah Makkeh, Dirk Oliver Theis
     # Permission to use and modify under Apache License version 2.0
     assert type(pdf_dirty) is dict, "broja_2pid.pid(pdf): pdf must be a dictionary"
+    assert type(cone_solver) is str, "broja_2pid.pid(pdf): `cone_solver' parameter must be string (e.g., 'ECOS')"
     assert cone_solver=="ECOS", "broja_2pid.pid(pdf): We currently don't have an interface for the Cone Solver "+cone_solver+" (only ECOS)."
     if __debug__:
         for k,v in pdf_dirty.items():
