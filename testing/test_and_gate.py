@@ -11,9 +11,11 @@ andgate[ (0,0,1) ] = .25
 andgate[ (0,1,0) ] = .25
 andgate[ (1,1,1) ] = .25
 
+parms = dict()
+parms['max_iters'] = 10
 print("Starting BROJA_2PID.pid() on AND gate.")
 try:
-  returndict = pid(andgate, output=1)
+  returndict = pid(andgate, cone_solver="ECOS", output=2, **parms)
 
   print("Shared information: ",returndict['SI'])
   print("Unique information in Y: ",returndict['UIY'])

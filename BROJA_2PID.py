@@ -206,7 +206,6 @@ class Solve_w_ECOS:
         # Permission to use and modify under Apache License version 2.0
         self.marg_yz = None # for cond[]mutinf computation below
 
-        self.ecos_kwargs = dict()
         if self.verbose != None:
             self.ecos_kwargs["verbose"] = self.verbose
 
