@@ -532,7 +532,7 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     retval = solver.solve()
     if retval != "success":
         print("\nCone Programming solver failed to find (near) optimal solution.\nPlease report the input probability density function to abdullah.makkeh@gmail.com\n")
-        if ecos_keep_solver_object:
+        if ecos_keep_solver_obj:
             return solver
         else:
             raise BROJA_2PID_Exception("BROJA_2PID_Exception: Cone Programming solver failed to find (near) optimal solution. Please report the input probability density function to abdullah.makkeh@gmail.com")
@@ -562,7 +562,7 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     return_data["Num_err"] = (primal_infeas, dual_infeas, max(-condent*ln(2) - dual_val, 0.0))
     return_data["Solver"] = "ECOS http://www.embotech.com/ECOS"
 
-    if ecos_keep_solver_object:
+    if ecos_keep_solver_obj:
         return_data["Solver Object"] = solver
     #^ if (keep solver)
 
