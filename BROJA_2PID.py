@@ -510,12 +510,12 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     # Check if the solver is implemented:
     assert cone_solver=="ECOS", "broja_2pid.pid(pdf): We currently don't have an interface for the Cone Solver "+cone_solver+" (only ECOS)."
 
-    # if cone_solver=="ECOS": .....
     pdf = { k:v  for k,v in pdf_dirty.items() if v > 1.e-300 }
 
     by_xy = marginal_xy(pdf)
     bz_xz = marginal_xz(pdf)
 
+    # if cone_solver=="ECOS": .....
     if output > 0:  print("BROJA_2PID: Preparing Cone Program data",end="...")
     solver = Solve_w_ECOS(by_xy, bz_xz)
     solver.create_model()
@@ -548,6 +548,7 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     dual_val      = solver.dual_value()
     bits = 1/log(2)
 
+    # elsif cone_solver=="SCS": .....
     return_data = dict()
     return_data["SI"]  = ( entropy_X - condent - condZmutinf - condYmutinf ) * bits
     return_data["UIY"] = ( condZmutinf                                     ) * bits
