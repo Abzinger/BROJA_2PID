@@ -492,7 +492,8 @@ def I_X_YZ(p):
     return mysum
 #^ I_X_YZ()
 
-def pid(pdf_dirty, cone_solver="ECOS", output=0, keep_solver_object=False, **solver_args):
+def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args,
+        keep_solver_object=False):
     # (c) Abdullah Makkeh, Dirk Oliver Theis
     # Permission to use and modify under Apache License version 2.0
     assert type(pdf_dirty) is dict, "broja_2pid.pid(pdf): pdf must be a dictionary"
