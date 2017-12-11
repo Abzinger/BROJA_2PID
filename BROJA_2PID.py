@@ -20,7 +20,7 @@
 # Please cite this paper when you use this software (cf. README.md)
 ##############################################################################################################
 
-from ecos  import solve
+import ecos
 from scipy import sparse
 import numpy as np
 from numpy import linalg as LA
@@ -230,7 +230,7 @@ class Solve_w_ECOS:
         if self.verbose != None:
             kwargs["verbose"] = self.verbose
 
-        solution = solve(self.c, self.G,self.h, self.dims,  self.A,self.b, **kwargs)
+        solution = ecos.solve(self.c, self.G,self.h, self.dims,  self.A,self.b, **kwargs)
 
         if 'x' in solution.keys():
             self.sol_rpq    = solution['x']
