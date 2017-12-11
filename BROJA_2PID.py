@@ -520,11 +520,14 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     solver = Solve_w_ECOS(by_xy, bz_xz)
     solver.create_model()
     if output > 1: solver.verbose = True
+
+    ecos_keep_solver_obj = False
     if 'keep_solver_object' in solver_args.keys():
         if solver_args['keep_solver_object']==True: ecos_keep_solver_obj = True
-        else:                                  ecos_keep_solver_obj = False
         del solver_args['keep_solver_object']
+
     solver.ecos_kwargs = solver_args
+
     if output > 0: print("done.")
 
     if output == 1: print("BROJA_2PID: Starting solver",end="...")
@@ -551,7 +554,11 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     dual_val      = solver.dual_value()
     bits = 1/log(2)
 
-    # elsif cone_solver=="SCS": .....
+    # elsif cone_solver=="SCS":
+    # .....
+    # #^endif
+
+
     return_data = dict()
     return_data["SI"]  = ( entropy_X - condent - condZmutinf - condYmutinf ) * bits
     return_data["UIY"] = ( condZmutinf                                     ) * bits
