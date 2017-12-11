@@ -492,8 +492,7 @@ def I_X_YZ(p):
     return mysum
 #^ I_X_YZ()
 
-def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args,
-        keep_solver_object=False):
+def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     # (c) Abdullah Makkeh, Dirk Oliver Theis
     # Permission to use and modify under Apache License version 2.0
     assert type(pdf_dirty) is dict, "broja_2pid.pid(pdf): pdf must be a dictionary"
@@ -526,7 +525,7 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args,
     if retval != "success":
         print("\nCone Programming solver failed to find (near) optimal solution.\nPlease report the input probability density function to abdullah.makkeh@gmail.com\n")
         # type(keep_solver_object) is bool
-        if type(keep_solver_object) is bool  and  keep_solver_object:
+        if kwargs['keep_solver_object']==True:
             return solver
         else:
             raise BROJA_2PID_Exception("BROJA_2PID_Exception: Cone Programming solver failed to find (near) optimal solution. Please report the input probability density function to abdullah.makkeh@gmail.com")
