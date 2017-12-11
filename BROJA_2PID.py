@@ -497,7 +497,6 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     # Permission to use and modify under Apache License version 2.0
     assert type(pdf_dirty) is dict, "broja_2pid.pid(pdf): pdf must be a dictionary"
     assert type(cone_solver) is str, "broja_2pid.pid(pdf): `cone_solver' parameter must be string (e.g., 'ECOS')"
-    assert cone_solver=="ECOS", "broja_2pid.pid(pdf): We currently don't have an interface for the Cone Solver "+cone_solver+" (only ECOS)."
     if __debug__:
         for k,v in pdf_dirty.items():
             assert type(k) is tuple or type(k) is list,           "broja_2pid.pid(pdf): pdf's keys must be tuples or lists"
@@ -508,6 +507,10 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     #^ if
     assert type(output) is int, "broja_2pid.pid(pdf,output): output must be an integer"
 
+    # Check if the solver is implemented:
+    assert cone_solver=="ECOS", "broja_2pid.pid(pdf): We currently don't have an interface for the Cone Solver "+cone_solver+" (only ECOS)."
+
+    # if cone_solver=="ECOS": .....
     pdf = { k:v  for k,v in pdf_dirty.items() if v > 1.e-300 }
 
     by_xy = marginal_xy(pdf)
