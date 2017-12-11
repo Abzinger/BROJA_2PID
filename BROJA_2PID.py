@@ -520,6 +520,10 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     solver = Solve_w_ECOS(by_xy, bz_xz)
     solver.create_model()
     if output > 1: solver.verbose = True
+    if 'keep_solver_object' in kwargs.keys()
+        if kwargs['keep_solver_object']==True: ecos_keep_solver_obj = True
+        else:                                  ecos_keep_solver_obj = False
+        del kwargs['keep_solver_object']
     solver.ecos_kwargs = solver_args
     if output > 0: print("done.")
 
@@ -528,8 +532,7 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     retval = solver.solve()
     if retval != "success":
         print("\nCone Programming solver failed to find (near) optimal solution.\nPlease report the input probability density function to abdullah.makkeh@gmail.com\n")
-        # type(keep_solver_object) is bool
-        if kwargs['keep_solver_object']==True:
+        if ecos_keep_solver_object:
             return solver
         else:
             raise BROJA_2PID_Exception("BROJA_2PID_Exception: Cone Programming solver failed to find (near) optimal solution. Please report the input probability density function to abdullah.makkeh@gmail.com")
@@ -559,7 +562,7 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     return_data["Num_err"] = (primal_infeas, dual_infeas, max(-condent*ln(2) - dual_val, 0.0))
     return_data["Solver"] = "ECOS http://www.embotech.com/ECOS"
 
-    if type(keep_solver_object) is bool  and  keep_solver_object:
+    if ecos_keep_solver_object:
         return_data["Solver Object"] = solver
     #^ if (keep solver)
 
