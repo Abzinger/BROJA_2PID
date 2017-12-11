@@ -520,10 +520,10 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     solver = Solve_w_ECOS(by_xy, bz_xz)
     solver.create_model()
     if output > 1: solver.verbose = True
-    if 'keep_solver_object' in kwargs.keys()
-        if kwargs['keep_solver_object']==True: ecos_keep_solver_obj = True
+    if 'keep_solver_object' in solver_args.keys():
+        if solver_args['keep_solver_object']==True: ecos_keep_solver_obj = True
         else:                                  ecos_keep_solver_obj = False
-        del kwargs['keep_solver_object']
+        del solver_args['keep_solver_object']
     solver.ecos_kwargs = solver_args
     if output > 0: print("done.")
 
