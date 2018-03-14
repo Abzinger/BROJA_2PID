@@ -17,14 +17,7 @@ print("Starting BROJA_2PID.pid() on AND gate.")
 try:
   returndict = pid(andgate, cone_solver="ECOS", output=2, **parms)
 
-  print("Shared information: ",returndict['SI'])
-  print("Unique information in Y: ",returndict['UIY'])
-  print("Unique information in Z: ",returndict['UIZ'])
-  print("Synergistic information: ",returndict['CI'])
-  print("Gap between feasible solution value and lower bound: ", returndict['Num_err'][2])
-  print("Primal feasibility: ", returndict['Num_err'][0])
-  print("Dual feasibility: ", returndict['Num_err'][1])
-
+  
 except BROJA_2PID_Exception:
   print("Cone Programming solver failed to find (near) optimal solution. Please report the input probability density function to abdullah.makkeh@gmail.com")
 
