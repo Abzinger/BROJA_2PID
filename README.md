@@ -15,9 +15,9 @@ The details of the implementation, user interface, and example code are describe
 ...we ask that you give proper reference.
 If you use it with only small modifications (note the Apache 2.0 license), use 
 ```
-@Article{makkeh-theis-vicente:pidOpt:2017,
+@Article{makkeh-theis-vicente:broja2pid:2018,
   author =       {Makkeh, Abdullah and Theis, Dirk Oliver and Vicente, Raul},
-  title =        {BROJA-2PID: A cone programming based Partial Information Decomposition estimator},
+  title =        {BROJA-2PID: A robust estimator for Bertschinger et al.'s bivariate partial information decomposition},
   journal =      {jo},
   year =         2017,
   key =       {key},
