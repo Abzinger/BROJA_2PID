@@ -23,7 +23,7 @@ try:
   Primal feasibility: {Num_err[0]}
   Dual feasibility: {Num_err[1]}
   Duality Gap: {Num_err[2]}"""
-  print(msg.format(**returndat))
+  print(msg.format(**returndata))
   
 except BROJA_2PID_Exception:
   print("Cone Programming solver failed to find (near) optimal solution. Please report the input probability density function to abdullah.makkeh@gmail.com")
