@@ -45,9 +45,9 @@ if maxiter < 1:
 #^ if
 
 # tic = time.process_time()
-time_us = []
-time_comUI = []
-time_dit = []
+time_us = 0
+time_comUI = 0
+time_dit = 0 
 for iter in range(maxiter):
     print("Random PDFs   with |X| =",nX,"|Y| =",nY," |Z| =",nZ)
     print("______________________________________________________________________")
@@ -76,7 +76,8 @@ for iter in range(maxiter):
     print("CI: ", pid_['CI'])
     print("SI: ", pid_['SI'])
     itoc_us = time.process_time()
-    time_us.append(itoc_us-itic_us)
+    temp_us = itoc_us-itic_us
+    time_us += temp_us
     print("Time: ",itoc_us-itic_us,"secs")
     # Compute PID using ComputeUI
     print("Run ComputeUI.computeQUI()")
@@ -102,7 +103,8 @@ for iter in range(maxiter):
     print("UIZ_comUI: ", UIZ)
     print("CI_comUI: ", CI)
     print("SI_comUI: ", SI)
-    time_comUI.append(itoc_comUI-itic_comUI)
+    temp_comUI = itoc_comUI-itic_comUI
+    time_comUI += temp_comUI
     print("Time_comUI: ",itoc_comUI-itic_comUI,"secs")
     print("Run dit broja")
     itic_dit = time.process_time()
@@ -111,22 +113,14 @@ for iter in range(maxiter):
     print("UIY_dit:", pid_dit['X'])
     print("UIZ_dit:", pid_dit['Y'])
     itoc_dit = time.process_time()
-    time_dit.append(itoc_dit-itic_dit)
+    temp_dit = itoc_dit-itic_dit
+    time_dit += temp_dit
     print("Time_dit: ",itoc_dit-itic_dit,"secs")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 #^ for iter
 toc = time.process_time()
 print("**********************************************************************")
-tot_us = 0
-tot_comUI = 0
-tot_dit = 0 
-for i in time_us:
-    tot_us += i
-for i in time_comUI:
-    tot_comUI += i
-for i in time_dit:
-    tot_dit += i
-print("BROJA_2PID Average time: ", (tot_us)/maxiter, "secs")
-print("ComputeUI Average time: ", (tot_comUI)/maxiter, "secs")
-print("dit Average time: ", (tot_dit)/maxiter, "secs")
+print("BROJA_2PID Average time: ", (time_us)/maxiter, "secs")
+print("ComputeUI Average time: ", (time_comUI)/maxiter, "secs")
+print("dit Average time: ", (time_dit)/maxiter, "secs")
 # EOF
