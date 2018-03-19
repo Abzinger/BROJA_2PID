@@ -44,7 +44,10 @@ if maxiter < 1:
     exit(1)
 #^ if
 
-tic = time.process_time()
+# tic = time.process_time()
+time_us = []
+time_comUI = []
+time_dit = []
 for iter in range(maxiter):
     print("Random PDFs   with |X| =",nX,"|Y| =",nY," |Z| =",nZ)
     print("______________________________________________________________________")
@@ -73,6 +76,7 @@ for iter in range(maxiter):
     print("CI: ", pid_['CI'])
     print("SI: ", pid_['SI'])
     itoc_us = time.process_time()
+    time_us.append(itoc_us-itic_us)
     print("Time us: ",itoc_us-itic_us,"secs")
     # Compute PID using ComputeUI
     print("Run ComputeUI.computeQUI()")
@@ -98,6 +102,7 @@ for iter in range(maxiter):
     print("UIZ", UIZ)
     print("CI", CI)
     print("SI", SI)
+    time_comUI.append(itoc_comUI-itic_comUI)
     print("Time: ",itoc_comUI-itic_comUI,"secs")
     print("Run dit broja")
     itic_dit = time.process_time()
@@ -106,12 +111,23 @@ for iter in range(maxiter):
     print("UIY", idontknow['X'])
     print("UIZ", idontknow['Y'])
     itoc_dit = time.process_time()
+    time_dit.append(itoc_dit-itic_dit)
     print("Time: ",itoc_dit-itic_dit,"secs")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 #^ for iter
 toc = time.process_time()
 print("**********************************************************************")
-print("BROJA_2PID Average time: ", (toc_us-tic_us)/maxiter, "secs")
-print("ComputeUI Average time: ", (toc-tic)/maxiter, "secs")
-print("dit Average time: ", (toc_dit-tic_dit)/maxiter, "secs")
+tot_us = 0
+tot_comUI = 0
+tot_dit = 0 
+for i in time_us:
+    tot_us += i
+for i in time_comUI:
+    tot_comUI += i
+for i in time_dit:
+    tot_dit += i
+
+print("BROJA_2PID Average time: ", (tot_us)/maxiter, "secs")
+print("ComputeUI Average time: ", (tot_comUI)/maxiter, "secs")
+print("dit Average time: ", (tot_dit)/maxiter, "secs")
 # EOF
