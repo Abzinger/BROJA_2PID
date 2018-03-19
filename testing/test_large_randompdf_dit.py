@@ -63,6 +63,7 @@ for iter in range(maxiter):
             #^ for z
         #^ for y
     #^ for x
+    # Compute PID using BROJA_2PID 
     print("Run BROJA_2PID.pid().")
     itic_us = time.process_time()
     pid_ = BROJA.pid(pdf,output=0)
@@ -73,8 +74,9 @@ for iter in range(maxiter):
     print("SI: ", pid_['SI'])
     itoc_us = time.process_time()
     print("Time us: ",itoc_us-itic_us,"secs")
+    # Compute PID using ComputeUI
     print("Run ComputeUI.computeQUI()")
-    itic = time.process_time()
+    itic_comUI = time.process_time()
     dpdf = Distribution(pdf)
     dpdf.set_rv_names('SXY')
     Q = computeQUI(distSXY = dpdf, DEBUG = True)
@@ -89,14 +91,14 @@ for iter in range(maxiter):
          + dit.shannon.conditional_entropy(Q, 'SX', 'Y')\
          - dit.shannon.conditional_entropy(Q, 'S', 'X') - dit.shannon.conditional_entropy(Q, 'Y', 'X') \
          + dit.shannon.conditional_entropy(Q, 'SY', 'X')
-    itoc = time.process_time()
+    itoc_comUI = time.process_time()
     # print("optimal pdf", Q)
     print("Partial information decomposition ComputeUI: ")
     print("UIY", UIY)
     print("UIZ", UIZ)
     print("CI", CI)
     print("SI", SI)
-    print("Time: ",itoc-itic,"secs")
+    print("Time: ",itoc_comUI-itic_comUI,"secs")
     print("Run dit broja")
     itic_dit = time.process_time()
     idontknow = pid.ibroja.i_broja(dpdf, ['X', 'Y'], 'S')
