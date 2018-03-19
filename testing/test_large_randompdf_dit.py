@@ -28,7 +28,7 @@ try:
     nY = int(argv[2])
     nZ = int(argv[3])
     if len(argv)==5:    maxiter = int(argv[4])
-    else:               maxiter = 10
+    else:               maxiter = 250
 except:
     print("I couldn't parse one of the arguments (they must all be integers)")
     exit(1)
