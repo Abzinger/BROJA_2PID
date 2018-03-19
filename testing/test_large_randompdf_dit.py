@@ -77,7 +77,7 @@ for iter in range(maxiter):
     print("SI: ", pid_['SI'])
     itoc_us = time.process_time()
     time_us.append(itoc_us-itic_us)
-    print("Time us: ",itoc_us-itic_us,"secs")
+    print("Time: ",itoc_us-itic_us,"secs")
     # Compute PID using ComputeUI
     print("Run ComputeUI.computeQUI()")
     itic_comUI = time.process_time()
@@ -98,21 +98,21 @@ for iter in range(maxiter):
     itoc_comUI = time.process_time()
     # print("optimal pdf", Q)
     print("Partial information decomposition ComputeUI: ")
-    print("UIY", UIY)
-    print("UIZ", UIZ)
-    print("CI", CI)
-    print("SI", SI)
+    print("UIY_comUI: ", UIY)
+    print("UIZ_comUI: ", UIZ)
+    print("CI_comUI: ", CI)
+    print("SI_comUI: ", SI)
     time_comUI.append(itoc_comUI-itic_comUI)
-    print("Time: ",itoc_comUI-itic_comUI,"secs")
+    print("Time_comUI: ",itoc_comUI-itic_comUI,"secs")
     print("Run dit broja")
     itic_dit = time.process_time()
-    idontknow = pid.ibroja.i_broja(dpdf, ['X', 'Y'], 'S')
+    pid_dit = pid.ibroja.i_broja(dpdf, ['X', 'Y'], 'S')
     print("Partial information decomposition dit:")
-    print("UIY", idontknow['X'])
-    print("UIZ", idontknow['Y'])
+    print("UIY_dit:", pid_dit['X'])
+    print("UIZ_dit:", pid_dit['Y'])
     itoc_dit = time.process_time()
     time_dit.append(itoc_dit-itic_dit)
-    print("Time: ",itoc_dit-itic_dit,"secs")
+    print("Time_dit: ",itoc_dit-itic_dit,"secs")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 #^ for iter
 toc = time.process_time()
@@ -126,7 +126,6 @@ for i in time_comUI:
     tot_comUI += i
 for i in time_dit:
     tot_dit += i
-
 print("BROJA_2PID Average time: ", (tot_us)/maxiter, "secs")
 print("ComputeUI Average time: ", (tot_comUI)/maxiter, "secs")
 print("dit Average time: ", (tot_dit)/maxiter, "secs")
