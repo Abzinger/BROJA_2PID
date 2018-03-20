@@ -44,10 +44,10 @@ if maxiter < 1:
     exit(1)
 #^ if
 
-# tic = time.process_time()
 time_us = 0
 time_comUI = 0
-time_dit = 0 
+time_dit = 0
+
 for iter in range(maxiter):
     print("Random PDFs   with |X| =",nX,"|Y| =",nY," |Z| =",nZ)
     print("______________________________________________________________________")
@@ -66,7 +66,9 @@ for iter in range(maxiter):
             #^ for z
         #^ for y
     #^ for x
+
     # Compute PID using BROJA_2PID 
+
     print("Run BROJA_2PID.pid().")
     itic_us = time.process_time()
     pid_ = BROJA.pid(pdf,output=0)
@@ -79,7 +81,9 @@ for iter in range(maxiter):
     temp_us = itoc_us-itic_us
     time_us += temp_us
     print("Time: ",itoc_us-itic_us,"secs")
+
     # Compute PID using ComputeUI
+
     print("Run ComputeUI.computeQUI()")
     itic_comUI = time.process_time()
     dpdf = Distribution(pdf)
@@ -106,6 +110,9 @@ for iter in range(maxiter):
     temp_comUI = itoc_comUI-itic_comUI
     time_comUI += temp_comUI
     print("Time_comUI: ",itoc_comUI-itic_comUI,"secs")
+
+    # Compute PID using dit package
+
     print("Run dit broja")
     itic_dit = time.process_time()
     pid_dit = pid.ibroja.i_broja(dpdf, ['X', 'Y'], 'S')
@@ -116,9 +123,15 @@ for iter in range(maxiter):
     temp_dit = itoc_dit-itic_dit
     time_dit += temp_dit
     print("Time_dit: ",itoc_dit-itic_dit,"secs")
+
+    # Compare BROJA_2PID with ComputeUI & dit package solver 
+
+    print("UIY_diff_comUI: ",UIY - pid_['UIY'])
+    print("UIZ_diff_comUI: ",UIZ - pid_['UIZ'])
+    print("UIY_diff_dit: ",pid_dit['X'] - pid_['UIY'])
+    print("UIZ_diff_dit: ",pid_dit['Y'] - pid_['UIZ'])
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 #^ for iter
-toc = time.process_time()
 print("**********************************************************************")
 print("BROJA_2PID Average time: ", (time_us)/maxiter, "secs")
 print("ComputeUI Average time: ", (time_comUI)/maxiter, "secs")
