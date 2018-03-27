@@ -1,4 +1,4 @@
-# test_large_copy_broja_2pid_computeUI.py
+# test_large_copy_admUI_dit.py
 
 from sys import path
 path.insert(0,"..")
