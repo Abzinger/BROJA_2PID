@@ -39,3 +39,14 @@ If you make significant modifications but stick to the approach based on the Exp
   note    = {\url{http://dx.doi.org/10.3390/e19100530}}
 }
 ```
+
+* Files *
+The following files contain tests:
+
+* `<test_from_file_computeUI_dit.py>`: testcase for ~random~ distributions read from files in `randompdfs` folder to compare the BROJA_2PID algorithms with iterative divergence minimization algorithm from the Github repository [computeUI](https://github.com/jarauh/computeUI)  and  with the Frank-Wolfe implementation in the [dit](https://github.com/dit/dit).
+
+* `<test_large_random_computeUI_dit.py>`: testcase for ~random~ distributions generated simultaneously to compare the BROJA_2PID algorithms with iterative divergence minimization algorithm from the Github repository [computeUI](https://github.com/jarauh/computeUI)  and  with the Frank-Wolfe implementation in the [dit](https://github.com/dit/dit).
+
+* `<test_large_copy_computeUI_dit.py>`: testcase for ~Copy gate~ to compare the BROJA_2PID algorithms with iterative divergence minimization algorithm from the Github repository [computeUI](https://github.com/jarauh/computeUI)  and  with the Frank-Wolfe implementation in the [dit](https://github.com/dit/dit).
+
+* `<test_gates_computeUI_dit.py>`: testcase for some ~logical gate~ to compare the BROJA_2PID algorithms with iterative divergence minimization algorithm from the Github repository [computeUI](https://github.com/jarauh/computeUI)  and  with the Frank-Wolfe implementation in the [dit](https://github.com/dit/dit).
