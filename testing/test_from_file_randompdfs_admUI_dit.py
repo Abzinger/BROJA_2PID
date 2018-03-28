@@ -10,7 +10,7 @@ import time
 from random import random
 from sys import argv
 import pickle
-path.insert(0, "../../computeUI/python/")
+# path.insert(0, "../../computeUI/python/")
 from admUI import computeQUI
 
 print("test_from_file_randompdf_admUI_dit.py -- part of BROJA_2PID (https://github.com/dot-at/BROJA_2PID/)")
@@ -84,7 +84,7 @@ for iter in range(maxiter):
 
     # Compute PID using BROJA_2PID
     
-    if s == 0 or s == 3 or s == 5:
+    if s == 0 or s == 3 or s == 4 or s == 5:
         print("Run BROJA_2PID.pid().")
         itic_us = time.process_time()
         pid_ = BROJA.pid(pdf,output=0,**parms)
@@ -173,13 +173,13 @@ for iter in range(maxiter):
 f.close()
 print("**********************************************************************")
 
-if s != 2 or s != 3: 
+if s == 0 or s == 3 or s == 4 or s == 5: 
     print("BROJA_2PID Average time: ", (time_us)/maxiter, "secs")
 #^ if
-if s != 0 or s != 2 or s != 4:
+if s == 1 or s == 3 or s == 4:
     print("ComputeUI Average time: ", (time_comUI)/maxiter, "secs")
 #^ if
-if s != 0 or s != 1 or s != 3:
+if s == 2 or s == 4 or s == 5:
     print("dit Average time: ", (time_dit)/maxiter, "secs")
 #^ if
 # EOF
