@@ -6,7 +6,7 @@ path.insert(0, "..")
 import BROJA_2PID as BROJA
 from BROJA_2PID import BROJA_2PID_Exception
 
-path.insert(0, "../../computeUI/python/")
+#path.insert(0, "../../computeUI/python/")
 from admUI import computeQUI
 from dit import *
 import time
