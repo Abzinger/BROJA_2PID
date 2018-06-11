@@ -15,7 +15,7 @@ The details of the implementation, user interface, and example code are describe
 ...we ask that you give proper reference.
 If you use it with only small modifications (note the Apache 2.0 license), use 
 ```
-@Article{makkeh-theis-vicente:broja2pid:2018,
+@Article{makkeh2018broja,
   author =       {Makkeh, Abdullah and Theis, Dirk Oliver and Vicente, Raul},
   title =        {BROJA-2PID: A robust estimator for Bertschinger et al.'s bivariate partial information decomposition},
   journal =      {Entropy},
