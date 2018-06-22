@@ -8,8 +8,7 @@ and
 * Abdullah Makkeh's PhD thesis (forthcoming (2018))
 
 The details of the implementation, user interface, and example code are described in
-* A. Makkeh, D.O. Theis, R. Vicente, *BROJA-2PID: A cone programming based Partial Information Decomposition estimator*
-(currently in preparation).
+* A. Makkeh, D.O. Theis, R. Vicente, *BROJA-2PID: A cone programming based Partial Information Decomposition estimator*, Entropy 2018, 20(4), 271-291; [doi:10.3390/e20040271](http://dx.doi.org/10.3390/e20040271).
 
 #### If you use this software...
 ...we ask that you give proper reference.
