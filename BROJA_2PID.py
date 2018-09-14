@@ -26,7 +26,7 @@ import numpy as np
 from numpy import linalg as LA
 import math
 from collections import defaultdict
-
+import time 
 log = math.log2
 ln  = math.log
 
@@ -99,7 +99,7 @@ class Solve_w_ECOS:
         m = len(self.b_xy) + len(self.b_xz)
         n_vars = 3*n
         n_cons = n+m
-
+        
         #
         # Create the equations: Ax = b
         #
@@ -398,24 +398,55 @@ class Solve_w_ECOS:
         #^ for
 
         dual_infeasability = 0.
-        for i,xyz in enumerate(self.trip_of_idx):
-            mu_yz = 0.
+
+        itic_new = time.process_time()
+        # Compute mu_*yz
+        # mu_xyz: dual variable of the coupling constraints
+        mu_yz = defaultdict(lambda: 0.)
+        for j,xyz in enumerate(self.trip_of_idx):
             x,y,z = xyz
-            # Compute mu_*yz
-            # mu_xyz: dual variable of the coupling constraints
-            for j,uvw in enumerate(self.trip_of_idx):
-                u,v,w = uvw
-                if v == y and w == z:
-                    mu_yz += self.sol_lambda[j]
+            mu_yz[(y,z)] += self.sol_lambda[j]
+        
+        for i,xyz in enumerate(self.trip_of_idx):
+            x,y,z = xyz
 
             # Get indices of dual variables of the marginal constriants
             xy_idx = len(self.trip_of_idx) + idx_of_xy[(x,y)]
             xz_idx = len(self.trip_of_idx) + len(self.b_xy) + idx_of_xz[(x,z)]
 
             # Find the most violated dual ieq
-            dual_infeasability = max( dual_infeasability, -self.sol_lambda[xy_idx] - self.sol_lambda[xz_idx] - mu_yz -ln(-self.sol_lambda[i]) - 1)
+            dual_infeasability = max( dual_infeasability, -self.sol_lambda[xy_idx]
+                                      - self.sol_lambda[xz_idx]
+                                      - mu_yz[(y,z)]
+                                      -ln(-self.sol_lambda[i])
+                                      - 1
+            )
         #^ for
+        # itoc_new = time.process_time()
+        # print("time of new check", itoc_new - itic_new, "secs")
+        # itic_old = time.process_time()
+        # for i,xyz in enumerate(self.trip_of_idx):
+        #     x,y,z = xyz
+        #     mu_yz = 0.
+        #     # Get indices of dual variables of the marginal constriants
+        #     xy_idx = len(self.trip_of_idx) + idx_of_xy[(x,y)]
+        #     xz_idx = len(self.trip_of_idx) + len(self.b_xy) + idx_of_xz[(x,z)]
 
+        #     # Compute mu_*yz
+        #     # mu_xyz: dual variable of the coupling constraints
+        #     for j,uvw in enumerate(self.trip_of_idx):
+        #         u,v,w = uvw
+        #         if v == y and w == z:
+        #             mu_yz += self.sol_lambda[j]
+                    
+        #     # Find the most violated dual ieq
+        #     dual_infeasability = max( dual_infeasability, -self.sol_lambda[xy_idx]
+        #                               - self.sol_lambda[xz_idx]
+        #                               - mu_yz
+        #                               -ln(-self.sol_lambda[i])
+        #                               - 1
+        #     )
+        # #^ for
         return primal_infeasability, dual_infeasability
     #^ check_feasibility()
 
