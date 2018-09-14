@@ -8,22 +8,21 @@ and
 * Abdullah Makkeh's PhD thesis (forthcoming (2018))
 
 The details of the implementation, user interface, and example code are described in
-* A. Makkeh, D.O. Theis, R. Vicente, *BROJA-2PID: A cone programming based Partial Information Decomposition estimator*
-(currently in preparation).
+* A. Makkeh, D.O. Theis, R. Vicente, *BROJA-2PID: A cone programming based Partial Information Decomposition estimator*, Entropy 2018, 20(4), 271-291; [doi:10.3390/e20040271](http://dx.doi.org/10.3390/e20040271).
 
 #### If you use this software...
 ...we ask that you give proper reference.
 If you use it with only small modifications (note the Apache 2.0 license), use 
 ```
-@Article{makkeh-theis-vicente:broja2pid:2018,
+@Article{makkeh2018broja,
   author =       {Makkeh, Abdullah and Theis, Dirk Oliver and Vicente, Raul},
   title =        {BROJA-2PID: A robust estimator for Bertschinger et al.'s bivariate partial information decomposition},
-  journal =      {jo},
-  year =         2017,
-  key =       {key},
-  volume =    {vol},
-  number =    {nr},
-  pages =     {1--2}
+  journal =      {Entropy},
+  volume =    {20},
+  number =    {4},
+  pages =     {271},
+  year =         2018,
+  publisher={Multidisciplinary Digital Publishing Institute}
 }
 ```
 If you make significant modifications but stick to the approach based on the Exponential Cone Programming model, use
