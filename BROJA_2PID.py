@@ -398,8 +398,7 @@ class Solve_w_ECOS:
         #^ for
 
         dual_infeasability = 0.
-
-        itic_new = time.process_time()
+        
         # Compute mu_*yz
         # mu_xyz: dual variable of the coupling constraints
         mu_yz = defaultdict(lambda: 0.)
@@ -422,9 +421,8 @@ class Solve_w_ECOS:
                                       - 1
             )
         #^ for
-        # itoc_new = time.process_time()
-        # print("time of new check", itoc_new - itic_new, "secs")
-        # itic_old = time.process_time()
+
+        
         # for i,xyz in enumerate(self.trip_of_idx):
         #     x,y,z = xyz
         #     mu_yz = 0.
@@ -469,7 +467,7 @@ def marginal_xz(p):
         else:                      marg[(x,z)] =  r
     return marg
 
-def I_X_Y(p):
+def I_Y(p):
     # Mutual information I( X ; Y )
     mysum   = 0.
     marg_x  = defaultdict(lambda: 0.)
@@ -485,9 +483,9 @@ def I_X_Y(p):
         x,y = xy
         if t > 0:  mysum += t * log( t / ( marg_x[x]*marg_y[y] ) )
     return mysum
-#^ I_X_Y()
+#^ I_Y()
 
-def I_X_Z(p):
+def I_Z(p):
     # Mutual information I( X ; Z )
     mysum   = 0.
     marg_x  = defaultdict(lambda: 0.)
@@ -503,9 +501,9 @@ def I_X_Z(p):
         x,z = xz
         if t > 0:  mysum += t * log( t / ( marg_x[x]*marg_z[z] ) )
     return mysum
-#^ I_X_Z()
+#^ I_Z()
 
-def I_X_YZ(p):
+def I_YZ(p):
     # Mutual information I( X ; Y , Z )
     mysum    = 0.
     marg_x   = defaultdict(lambda: 0.)
@@ -520,7 +518,7 @@ def I_X_YZ(p):
         x,y,z = xyz
         if t > 0:  mysum += t * log( t / ( marg_x[x]*marg_yz[(y,z)] ) )
     return mysum
-#^ I_X_YZ()
+#^ I_YZ()
 
 def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     # (c) Abdullah Makkeh, Dirk Oliver Theis
@@ -528,12 +526,15 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     assert type(pdf_dirty) is dict, "broja_2pid.pid(pdf): pdf must be a dictionary"
     assert type(cone_solver) is str, "broja_2pid.pid(pdf): `cone_solver' parameter must be string (e.g., 'ECOS')"
     if __debug__:
+        sum_p = 0.
         for k,v in pdf_dirty.items():
             assert type(k) is tuple or type(k) is list,           "broja_2pid.pid(pdf): pdf's keys must be tuples or lists"
             assert len(k)==3,                                     "broja_2pid.pid(pdf): pdf's keys must be tuples/lists of length 3"
             assert type(v) is float or ( type(v)==int and v==0 ), "broja_2pid.pid(pdf): pdf's values must be floats"
             assert v > -.1,                                       "broja_2pid.pid(pdf): pdf's values must not be negative"
+            sum_p += v
         #^ for
+        assert abs(sum_p - 1)< 1.e-10,                            "broja_2pid.pid(pdf): pdf's values must sum up to 1 (tolerance of precision is 1.e-10)"
     #^ if
     assert type(output) is int, "broja_2pid.pid(pdf,output): output must be an integer"
 
@@ -594,8 +595,11 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
     return_data["UIY"] = ( condZmutinf                                     ) * bits
     return_data["UIZ"] = ( condYmutinf                                     ) * bits
     return_data["CI"]  = ( condent - condent__orig                         ) * bits
-    
+
+    itic = time.process_time() 
     primal_infeas,dual_infeas = solver.check_feasibility()
+    itoc = time.process_time()
+    if output > 0: print("Time to check optimiality conditions: ",itoc - itic,"secs") 
     return_data["Num_err"] = (primal_infeas, dual_infeas, max(-condent*ln(2) - dual_val, 0.0))
     return_data["Solver"] = "ECOS http://www.embotech.com/ECOS"
 
