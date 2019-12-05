@@ -5,7 +5,7 @@ This Python module implements the Bertschinger-Rauh-Olbrich-Jost-Ay bivariate Pa
 It uses the Exponential Cone Programming approach described in
 * A. Makkeh, D.O. Theis, R. Vicente, *Bivariate Partial Information Decomposition: The Optimization Perspective* (Entropy 19, 530 (2017)),
 and
-* Abdullah Makkeh's PhD thesis (forthcoming (2018))
+* Abdullah Makkeh's PhD thesis *Applications of Optimization in Some Complex Systems* (2018)
 
 The details of the implementation, user interface, and example code are described in
 * A. Makkeh, D.O. Theis, R. Vicente, *BROJA-2PID: A cone programming based Partial Information Decomposition estimator*, Entropy 2018, 20(4), 271-291; [doi:10.3390/e20040271](http://dx.doi.org/10.3390/e20040271).
