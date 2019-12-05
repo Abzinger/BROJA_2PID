@@ -49,3 +49,13 @@ The following files contain tests:
 * `test_large_copy_computeUI_dit.py`: testcase for *Copy gate* to compare the BROJA_2PID algorithms with iterative divergence minimization algorithm from the Github repository [computeUI](https://github.com/jarauh/computeUI)  and  with the Frank-Wolfe implementation in the [dit](https://github.com/dit/dit).
 
 * `test_gates_computeUI_dit.py`: testcase for some *logical gate* to compare the BROJA_2PID algorithms with iterative divergence minimization algorithm from the Github repository [computeUI](https://github.com/jarauh/computeUI)  and  with the Frank-Wolfe implementation in the [dit](https://github.com/dit/dit).
+
+## Contributors
+
+* [Abdullah Makkeh](https://abzinger.github.io/), Algorithms & theory, Institute of Computer Science, University of Tartu, Tartu, Estonia.
+
+* [Daniel Chicharro](https://www.iit.it/advanced-robotics-people/daniel-chicharro), Department of Neurobiology, Harvard Medical School, Massachusetts, United States && Cognitive Neuropsychology Laboratory, Center for Neuroscience and Cognitive Systems@UniTn, Istituto Italiano di Tecnologia, Genoa, Italy.
+
+* [Dirk Oliver Theis](https://www.theory.cs.ut.ee/people/dot), Algorithms & theory, Institute of Computer Science, University of Tartu, Tartu, Estonia.
+
+* [Raul Vicente](https://neuro.cs.ut.ee/people/), Computational Neuroscience Lab, Institute of Computer Science, University of Tartu, Tartu, Estonia.
