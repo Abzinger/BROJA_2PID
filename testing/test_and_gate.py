@@ -1,5 +1,6 @@
 # test_and_gate.py
-from BROJA_2PID import pid, BROJA_2PID_Exception
+
+from broja2pid import BROJA_2PID
 
 # AND gate
 andgate = dict()
@@ -14,7 +15,7 @@ parms['max_iters'] = 10
 
 print("Starting BROJA_2PID.pid() on AND gate.")
 try:
-  returndict = pid(andgate, cone_solver="ECOS", output=2, **parms)
+  returndata = BROJA_2PID.pid(andgate, cone_solver="ECOS", output=2, **parms)
 
   msg="""Shared information: {SI}
   Unique information in Y: {UIY}
@@ -24,8 +25,9 @@ try:
   Dual feasibility: {Num_err[1]}
   Duality Gap: {Num_err[2]}"""
   print(msg.format(**returndata))
+
   
-except BROJA_2PID_Exception:
+except BROJA_2PID.BROJA_2PID_Exception:
   print("Cone Programming solver failed to find (near) optimal solution. Please report the input probability density function to abdullah.makkeh@gmail.com")
 
 print("The End")

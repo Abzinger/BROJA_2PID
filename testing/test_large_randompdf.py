@@ -1,10 +1,6 @@
 # test_large_randompdf.py
 
-from sys import path
-path.insert(0,"..")
-
-import BROJA_2PID as BROJA
-from BROJA_2PID import BROJA_2PID_Exception
+from broja2pid import BROJA_2PID
 
 import time
 from random import random
@@ -62,7 +58,7 @@ for iter in range(maxiter):
     #^ for x
     print("Run BROJA_2PID.pid().")
     itic = time.process_time()
-    pid = BROJA.pid(pdf,output=0)
+    pid = BROJA_2PID.pid(pdf,output=0)
     itoc = time.process_time()
     print("Partial information decomposition: ",pid)
     print("Time: ",itoc-itic,"secs")

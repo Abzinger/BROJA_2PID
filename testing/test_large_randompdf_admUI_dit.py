@@ -1,10 +1,6 @@
 # test_large_randompdf_admUI_dit.py
 
-from sys import path
-path.insert(0, "..")
-
-import BROJA_2PID as BROJA
-from BROJA_2PID import BROJA_2PID_Exception
+from broja2pid import BROJA_2PID
 
 #path.insert(0, "../../computeUI/python/")
 from admUI import computeQUI
@@ -93,7 +89,7 @@ for iter in range(maxiter):
     if s == 0 or s == 3 or s == 4 or s == 5:
         print("Run BROJA_2PID.pid().")
         itic_us = time.process_time()
-        pid_ = BROJA.pid(pdf,output=0)
+        pid_ = BROJA_2PID.pid(pdf,output=0)
         print("Partial information decomposition BROJA_2PID: ")
         print("UIY: ", pid_['UIY'])
         print("UIZ: ", pid_['UIZ'])

@@ -1,10 +1,7 @@
 # test_large_copy_admUI_dit.py
 
-from sys import path
-path.insert(0,"..")
 
-import BROJA_2PID as BROJA
-from BROJA_2PID import BROJA_2PID_Exception
+from broja2pid import BROJA_2PID
 
 #path.insert(0, "../../computeUI/python/")
 from admUI import computeQUI
@@ -28,7 +25,7 @@ if len(argv) != 8:
     print("             admUI                  if s=1;")
     print("             dit                    if s=2;")
     print("             BROJA_2pid and admUI   if s=3;")
-    print("             BROJA_2pid and admUI   if s=4;")
+    print("             BROJA_2pid and dit     if s=4;")
     print("             all three solvers      if s=5.")    
     exit(0)
 #^ if
@@ -81,7 +78,7 @@ for n_Y in range(l_Y,u_Y,step_Y):
         if s == 0 or s == 3 or s == 4 or s == 5 :
             print("Run BROJA_2PID.pid().")
             tic_us = time.process_time()
-            pid_ = BROJA.pid(pdf,output=0)
+            pid_ = BROJA_2PID.pid(pdf,output=0)
             toc_us = time.process_time()
             # print("Partial information decomposition: ",pid_)
             print("Deviation from analytical results:")

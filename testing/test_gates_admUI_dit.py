@@ -1,10 +1,6 @@
 # test_gates.py
 
-from sys import path
-path.insert(0,"..")
-
-import BROJA_2PID as BROJA
-from BROJA_2PID import BROJA_2PID_Exception
+from broja2pid import BROJA_2PID
 
 #path.insert(0, "../../computeUI/python/")
 from admUI import computeQUI
@@ -117,7 +113,7 @@ dirty_xorandgate[ ((0,0), 1, 1) ] = 0.
 print("Run BROJA_2PID.pid().")
 
 itic_us_and = time.process_time()
-res = BROJA.pid(andgate)
+res = BROJA_2PID.pid(andgate)
 print("AND gate: ", res)
 itoc_us_and = time.process_time()
 print("Time: ",itoc_us_and-itic_us_and,"secs")
@@ -128,7 +124,7 @@ print("                SI - true_SI = ", res["SI"] - .31127812445913284301757812
 
 
 itic_us_xor = time.process_time()
-res = BROJA.pid(xorgate)
+res = BROJA_2PID.pid(xorgate)
 print("XOR gate: ",res )
 itoc_us_xor = time.process_time()
 print("Time: ",itoc_us_xor-itic_us_xor,"secs")
@@ -139,7 +135,7 @@ print("                SI - true_SI = ", res["SI"] - 0.)
 
 
 itic_us_rdn = time.process_time()
-res = BROJA.pid(rdngate)
+res = BROJA_2PID.pid(rdngate)
 print("RDN gate: ",      res )
 itoc_us_rdn = time.process_time()
 print("Time: ",itoc_us_rdn-itic_us_rdn,"secs")
@@ -150,7 +146,7 @@ print("                SI - true_SI = ", res["SI"] - 1.)
 
 
 itic_us_unq = time.process_time()
-res = BROJA.pid(unqgate)
+res = BROJA_2PID.pid(unqgate)
 print("UNQ gate: ",      res )
 itoc_us_unq = time.process_time()
 print("Time: ",itoc_us_unq-itic_us_unq,"secs")
@@ -161,7 +157,7 @@ print("                SI - true_SI = ", res["SI"] - 0.)
 
 
 itic_us_rdnx = time.process_time()
-res =  BROJA.pid(rdnxorgate)
+res =  BROJA_2PID.pid(rdnxorgate)
 print("RDNXOR gate: ", res  )
 itoc_us_rdnx = time.process_time()
 print("Time: ",itoc_us_rdnx-itic_us_rdnx,"secs")
@@ -172,7 +168,7 @@ print("                SI - true_SI = ", res["SI"] - 1.)
 
 
 itic_us_rdnu = time.process_time()
-res = BROJA.pid(rdnunqxorgate)
+res = BROJA_2PID.pid(rdnunqxorgate)
 print("RDNUNQXOR gate: ",res )
 itoc_us_rdnu = time.process_time()
 print("Time: ",itoc_us_rdnu-itic_us_rdnu,"secs")
@@ -183,7 +179,7 @@ print("RDNUNQXOR gate: CI - true_CI = ", res["CI"] - 1.)
 print("                SI - true_SI = ", res["SI"] - 1.)
 
 itic_us_xand = time.process_time()
-res =  BROJA.pid(xorandgate)
+res =  BROJA_2PID.pid(xorandgate)
 print("XORAND gate: ",  res )
 itoc_us_xand = time.process_time()
 print("Time: ",itoc_us_xand-itic_us_xand,"secs")

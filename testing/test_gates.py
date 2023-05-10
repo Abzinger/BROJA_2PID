@@ -1,9 +1,8 @@
 # test_gates.py
 
-from sys import path
-path.insert(0,"..")
+from broja2pid import BROJA_2PID
 
-from BROJA_2PID import pid, BROJA_2PID_Exception
+pid = BROJA_2PID.pid
 
 # AND gate
 andgate = dict()

@@ -1,13 +1,9 @@
 # test_large_copy.py
 
-from sys import path
-path.insert(0,"..")
-
-import BROJA_2PID as BROJA
-from BROJA_2PID import BROJA_2PID_Exception
-
+from broja2pid import BROJA_2PID
 import time
 from math import log2
+ 
 
 for n_Y in range(10,1000,10):
     for n_Z in [10,25]:
@@ -23,7 +19,7 @@ for n_Y in range(10,1000,10):
         #^ for y
         print("Run BROJA_2PID.pid().")
         tic = time.process_time()
-        pid = BROJA.pid(pdf,output=0)
+        pid = BROJA_2PID.pid(pdf,output=0)
         toc = time.process_time()
         print("Partial information decomposition: ",pid)
         print("Deviation from analytical results:")

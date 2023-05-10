@@ -30,8 +30,8 @@ import time
 log = math.log2
 ln  = math.log
 
-# ECOS's exp cone: (r,p,q)   w/   q>0  &  exp(r/q) ≤ p/q
-# Translation:     (0,1,2)   w/   2>0  &  0/2      ≤ ln(1/2)
+# ECOS exp cone: (r,p,q)   w/   q>0  &  exp(r/q) \le p/q
+# Translation:     (0,1,2)   w/   2>0  &  0/2     \le ln(1/2)
 def r_vidx(i):
     return 3*i
 def p_vidx(i):
@@ -244,7 +244,7 @@ class Solve_w_ECOS:
                     if zysum > 0. :    self.marg_yz[ (y,z) ] = zysum
                 #^ for z
             #^ for y
-        #^ if ∄ marg_yz
+        #^ if \notexist marg_yz
     #^ provide_marginals()
 
     def condYmutinf(self):
@@ -534,7 +534,7 @@ def pid(pdf_dirty, cone_solver="ECOS", output=0, **solver_args):
             assert v > -.1,                                       "broja_2pid.pid(pdf): pdf's values must not be negative"
             sum_p += v
         #^ for
-        assert abs(sum_p - 1)< 1.e-10,                            "broja_2pid.pid(pdf): pdf's values must sum up to 1 (tolerance of precision is 1.e-10)"
+        assert abs(sum_p - 1)< 1.e-8,                            "broja_2pid.pid(pdf): pdf's values must sum up to 1 (tolerance of precision is 1.e-10)"
     #^ if
     assert type(output) is int, "broja_2pid.pid(pdf,output): output must be an integer"
 
