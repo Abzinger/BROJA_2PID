@@ -15,7 +15,7 @@ setup(
     url='https://github.com/Abzinger/BROJA_2PID',
     author='Abdullah Makkeh and Dirk Oliver Theis',
     author_email='abdullah.makkeh@gmail.com',
-    license=['Apache License 2.0'],
+    license='Apache License 2.0',
     packages=['broja2pid'],
     install_requires=install_requires,
     classifiers=[
